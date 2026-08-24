@@ -1,0 +1,16 @@
+{
+  "name": "remote-mouse-jiggler-site",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Website, showcase, privacy policy and terms for Remote Mouse Jiggler Android App",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.6.0",
+    "astro": "^5.16.5"
+  }
+}
