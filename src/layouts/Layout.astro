@@ -1,380 +1,150 @@
 ---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { SITE } from "../data/site";
+
 interface Props {
     title: string;
-    description?: string;
+    description: string;
+    /** Overrides the generated canonical URL. */
+    canonical?: string;
+    /** Path (relative to the site base) of the social share image. */
+    ogImage?: string;
+    /** JSON-LD objects appended to the page's structured data graph. */
+    schema?: Record<string, unknown>[];
+    /** Suffix appended to the title, e.g. "Features". */
+    titleSuffix?: string;
 }
 
 const {
     title,
-    description = "Remote Mouse Jiggler - Bluetooth HID Mouse, Keyboard, TV Remote & Automated Jiggler for Android. No PC software required.",
+    description,
+    canonical,
+    ogImage = "og-image.png",
+    schema = [],
+    titleSuffix = "",
 } = Astro.props;
+
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const siteUrl = Astro.site ?? new URL(SITE.url);
+
+/**
+ * Search Console verification token. Set PUBLIC_GOOGLE_SITE_VERIFICATION in
+ * the build environment (or .env) to emit the verification meta tag.
+ */
+const googleVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
+
+/** Absolute, https-only canonical URL for this page. */
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, siteUrl).href;
+const ogImageUrl = new URL(`${base}/${ogImage}`, siteUrl).href;
+
+const fullTitle = titleSuffix ? `${title} · ${SITE.name}` : title;
 ---
 
 <!doctype html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="generator" content={Astro.generator} />
-        <title>{title}</title>
+
+        <title>{fullTitle}</title>
         <meta name="description" content={description} />
         <meta
-            name="keywords"
-            content="Remote Mouse Jiggler, Bluetooth Mouse, Android Mouse Jiggler, Bluetooth HID, Trackpad Android, Gyroscope Air Mouse, Android TV Remote, Keep PC Awake, No Dongle Jiggler, heymeowcat"
+            name="robots"
+            content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
         />
-        
-        <!-- OpenGraph / Social -->
-        <meta property="og:title" content={title} />
-        <meta property="og:description" content={description} />
+        <meta name="application-name" content={SITE.name} />
+        <meta name="apple-mobile-web-app-title" content={SITE.name} />
+        <meta name="author" content={SITE.developerName} />
+        <meta name="theme-color" content="#3f19bc" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#0c0918" media="(prefers-color-scheme: dark)" />
+
+        <!-- Canonical -->
+        <link rel="canonical" href={canonicalUrl} />
+
+        <!-- Search Console / Bing verification -->
+        {
+            googleVerification && (
+                <meta
+                    name="google-site-verification"
+                    content={googleVerification}
+                />
+            )
+        }
+
+        <!-- Icons / manifest -->
+        <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+        <link rel="icon" type="image/png" sizes="32x32" href={`${base}/favicon-32.png`} />
+        <link rel="apple-touch-icon" sizes="180x180" href={`${base}/apple-touch-icon.png`} />
+        <link rel="manifest" href={`${base}/site.webmanifest`} />
+
+        <!-- Open Graph -->
         <meta property="og:type" content="website" />
-        <meta property="og:image" content={`${base}/remote-mouse-jiggler-logo.png`} />
+        <meta property="og:site_name" content={SITE.name} />
+        <meta property="og:locale" content={SITE.locale} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:title" content={fullTitle} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={ogImageUrl} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={`${SITE.name} app icon and wordmark`} />
+
+        <!-- Twitter -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={title} />
+        <meta name="twitter:title" content={fullTitle} />
         <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={`${base}/remote-mouse-jiggler-logo.png`} />
+        <meta name="twitter:image" content={ogImageUrl} />
+        <meta name="twitter:image:alt" content={`${SITE.name} app icon and wordmark`} />
 
-        <!-- Google Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap"
-            rel="stylesheet"
-        />
+        <!-- Resolve the theme before first paint so there is no flash of the
+             wrong colour scheme and no layout shift. -->
+        <script is:inline>
+            (function () {
+                try {
+                    var stored = localStorage.getItem("rmj-theme");
+                    var pref =
+                        stored === "light" || stored === "dark" || stored === "system"
+                            ? stored
+                            : "system";
+                    var resolved =
+                        pref === "system"
+                            ? window.matchMedia("(prefers-color-scheme: dark)").matches
+                                ? "dark"
+                                : "light"
+                            : pref;
+                    document.documentElement.setAttribute("data-theme-pref", pref);
+                    document.documentElement.dataset.theme = resolved;
+                } catch (e) {
+                    document.documentElement.dataset.theme = "light";
+                }
+            })();
+        </script>
+
+        {
+            schema.length > 0 && (
+                <script
+                    type="application/ld+json"
+                    is:inline
+                    set:html={JSON.stringify(
+                        schema.length === 1 ? schema[0] : { "@context": "https://schema.org", "@graph": schema },
+                    )}
+                />
+            )
+        }
     </head>
+
     <body>
-        <header class="site-header">
-            <div class="container nav-container">
-                <a href={`${base}/`} class="brand-link" id="nav-brand">
-                    <img
-                        src={`${base}/remote-mouse-jiggler-logo.png`}
-                        alt="Remote Mouse Jiggler Logo"
-                        class="brand-icon"
-                        width="36"
-                        height="36"
-                    />
-                    <span class="brand-name">Remote Mouse Jiggler</span>
-                </a>
+        <a class="skip-link" href="#main">Skip to content</a>
 
-                <nav class="nav-links">
-                    <a href={`${base}/#features`}>Features</a>
-                    <a href={`${base}/#interactive-demo`}>Jiggler Demo</a>
-                    <a href={`${base}/#how-it-works`}>How It Works</a>
-                    <a href={`${base}/#faq`}>FAQ</a>
-                </nav>
+        <Header />
 
-                <div class="nav-actions">
-                    <a
-                        href="https://play.google.com/store/apps/details?id=com.heymeowcat.remotemousejiggler"
-                        class="btn-get-app"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        id="nav-get-app"
-                    >
-                        <span>Get App</span>
-                    </a>
-                </div>
-            </div>
-        </header>
-
-        <main>
+        <main id="main">
             <slot />
         </main>
 
-        <footer class="site-footer">
-            <div class="container footer-content">
-                <div class="footer-brand">
-                    <div class="footer-logo">
-                        <img
-                            src={`${base}/remote-mouse-jiggler-logo.png`}
-                            alt="Remote Mouse Jiggler"
-                            width="40"
-                            height="40"
-                        />
-                        <span class="footer-app-name">Remote Mouse Jiggler</span>
-                    </div>
-                    <p class="footer-tagline">
-                        Native Bluetooth HID Mouse, Keyboard & Jiggler for Android.
-                    </p>
-                </div>
-
-                <div class="footer-links">
-                    <div class="footer-col">
-                        <h4>Navigation</h4>
-                        <a href={`${base}/`}>Home</a>
-                        <a href={`${base}/#features`}>Features</a>
-                        <a href={`${base}/#interactive-demo`}>Demo</a>
-                        <a href={`${base}/#how-it-works`}>How It Works</a>
-                        <a href={`${base}/#faq`}>FAQ</a>
-                    </div>
-                    <div class="footer-col">
-                        <h4>Legal</h4>
-                        <a href={`${base}/privacy-policy`}>Privacy Policy</a>
-                        <a href={`${base}/terms-of-service`}>Terms of Service</a>
-                    </div>
-                    <div class="footer-col">
-                        <h4>Developer</h4>
-                        <a href="https://github.com/heymeowcat/RemoteMouseJiggler" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
-                        <a href="mailto:support@heymeowcat.is-a.dev">Support</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="container footer-bottom">
-                <p>
-                    &copy; {new Date().getFullYear()} heymeowcat. All rights reserved.
-                </p>
-            </div>
-        </footer>
+        <Footer />
     </body>
 </html>
-
-<style is:global>
-    :root {
-        --primary: #ffa801;
-        --primary-hover: #ffb72b;
-        --primary-glow: rgba(255, 168, 1, 0.25);
-        --secondary-glow: rgba(255, 211, 42, 0.15);
-        
-        --bg-main: #0c0d14;
-        --bg-surface: #141622;
-        --bg-surface-elevated: #1b1e2e;
-        --bg-glass: rgba(20, 22, 34, 0.75);
-        
-        --border-subtle: rgba(255, 255, 255, 0.08);
-        --border-highlight: rgba(255, 168, 1, 0.3);
-        
-        --text-main: #f3f4f6;
-        --text-muted: #9ca3af;
-        --text-dim: #6b7280;
-        
-        --radius-sm: 8px;
-        --radius-md: 14px;
-        --radius-lg: 20px;
-        --radius-xl: 28px;
-        --radius-pill: 9999px;
-    }
-
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
-
-    html {
-        scroll-behavior: smooth;
-        color-scheme: dark;
-    }
-
-    body {
-        font-family:
-            "Outfit",
-            system-ui,
-            -apple-system,
-            sans-serif;
-        background-color: var(--bg-main);
-        color: var(--text-main);
-        line-height: 1.6;
-        -webkit-font-smoothing: antialiased;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        background-image: 
-            radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255, 168, 1, 0.12), transparent 70%),
-            radial-gradient(circle at 10% 40%, rgba(255, 168, 1, 0.04), transparent 40%),
-            radial-gradient(circle at 90% 70%, rgba(255, 211, 42, 0.04), transparent 40%);
-        background-attachment: fixed;
-    }
-
-    main {
-        flex: 1;
-    }
-
-    .container {
-        width: 100%;
-        max-width: 1160px;
-        margin: 0 auto;
-        padding: 0 1.5rem;
-    }
-
-    /* Header & Navigation */
-    .site-header {
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        background: var(--bg-glass);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border-bottom: 1px solid var(--border-subtle);
-    }
-
-    .nav-container {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 72px;
-    }
-
-    .brand-link {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        text-decoration: none;
-        color: var(--text-main);
-        font-weight: 700;
-        font-size: 1.15rem;
-        transition: transform 0.2s;
-    }
-
-    .brand-link:hover {
-        transform: translateY(-1px);
-    }
-
-    .brand-icon {
-        border-radius: 10px;
-        box-shadow: 0 4px 12px var(--primary-glow);
-    }
-
-    .nav-links {
-        display: flex;
-        align-items: center;
-        gap: 1.75rem;
-    }
-
-    .nav-link {
-        color: var(--text-muted);
-        text-decoration: none;
-        font-weight: 500;
-        font-size: 0.925rem;
-        transition: color 0.2s;
-    }
-
-    .nav-link:hover {
-        color: var(--primary);
-    }
-
-    .nav-actions {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
-
-    .btn-get-app {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        background: linear-gradient(135deg, var(--primary), #ffd32a);
-        color: #0c0d14;
-        padding: 0.55rem 1.25rem;
-        border-radius: var(--radius-pill);
-        font-weight: 700;
-        font-size: 0.875rem;
-        text-decoration: none;
-        transition: all 0.2s;
-        box-shadow: 0 4px 14px var(--primary-glow);
-    }
-
-    .btn-get-app:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(255, 168, 1, 0.4);
-    }
-
-    /* Footer */
-    .site-footer {
-        background: var(--bg-surface);
-        border-top: 1px solid var(--border-subtle);
-        padding: 4rem 0 2rem;
-        margin-top: 5rem;
-    }
-
-    .footer-content {
-        display: grid;
-        grid-template-columns: 1.5fr 2fr;
-        gap: 3rem;
-        padding-bottom: 3rem;
-        border-bottom: 1px solid var(--border-subtle);
-    }
-
-    .footer-logo {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin-bottom: 1rem;
-    }
-
-    .footer-logo img {
-        border-radius: 10px;
-    }
-
-    .footer-app-name {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: var(--text-main);
-    }
-
-    .footer-tagline {
-        color: var(--text-muted);
-        font-size: 0.95rem;
-        max-width: 320px;
-    }
-
-    .footer-links {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2rem;
-    }
-
-    .footer-col h4 {
-        color: var(--text-main);
-        font-size: 0.95rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
-        letter-spacing: 0.02em;
-    }
-
-    .footer-col a {
-        display: block;
-        color: var(--text-muted);
-        text-decoration: none;
-        font-size: 0.875rem;
-        margin-bottom: 0.6rem;
-        transition: color 0.2s;
-    }
-
-    .footer-col a:hover {
-        color: var(--primary);
-    }
-
-    .footer-bottom {
-        padding-top: 2rem;
-        text-align: center;
-        font-size: 0.85rem;
-        color: var(--text-dim);
-    }
-
-    @media (max-width: 860px) {
-        .nav-links {
-            display: none;
-        }
-
-        .footer-content {
-            grid-template-columns: 1fr;
-            gap: 2rem;
-        }
-
-        .footer-links {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
-    @media (max-width: 520px) {
-        .footer-links {
-            grid-template-columns: 1fr;
-        }
-        
-        .brand-name {
-            display: none;
-        }
-    }
-</style>
