@@ -1,0 +1,185 @@
+---
+import Brand from "./Brand.astro";
+import { NAV, SITE } from "../data/site";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const year = new Date().getFullYear();
+
+const columns = [
+    {
+        title: "Product",
+        links: [
+            { label: "Features", href: `${base}/features/` },
+            { label: "Jiggler patterns", href: `${base}/jiggler-patterns/` },
+            { label: "How it works", href: `${base}/bluetooth-hid/` },
+            { label: "Download the app", href: `${base}/download/` },
+        ],
+    },
+    {
+        title: "Support",
+        links: [
+            { label: "FAQ", href: `${base}/faq/` },
+            { label: "Changelog", href: `${base}/changelog/` },
+            { label: "Press kit", href: `${base}/press/` },
+            { label: `Email ${SITE.developer}`, href: `mailto:${SITE.email}` },
+        ],
+    },
+    {
+        title: "Legal",
+        links: [
+            { label: "Privacy policy", href: `${base}/privacy/` },
+            { label: "Terms of service", href: `${base}/terms/` },
+        ],
+    },
+];
+---
+
+<footer class="site-footer">
+    <div class="container site-footer__inner">
+        <div class="site-footer__about">
+            <div class="site-footer__brand">
+                <Brand size={38} class="site-footer__mark" />
+                <span class="site-footer__name">{SITE.name}</span>
+            </div>
+            <p class="site-footer__tagline">
+                Turn an Android phone into a Bluetooth mouse, keyboard and automated
+                mouse jiggler. No software on your computer, no internet access, no
+                tracking.
+            </p>
+            <div class="btn-row site-footer__actions">
+                <a
+                    class="btn btn--primary btn--sm"
+                    href={SITE.playUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Get it on Google Play
+                </a>
+            </div>
+        </div>
+
+        <nav class="site-footer__nav" aria-label="Footer">
+            {
+                columns.map((column) => (
+                    <div class="site-footer__col">
+                        <h2 class="site-footer__heading">{column.title}</h2>
+                        <ul>
+                            {column.links.map((link) => (
+                                <li>
+                                    <a href={link.href}>{link.label}</a>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                ))
+            }
+        </nav>
+    </div>
+
+    <div class="container site-footer__bottom">
+        <p>&copy; {year} {SITE.developerName}. {SITE.name} is free to download and use.</p>
+        <p class="site-footer__meta">
+            Version {SITE.version} · Requires {SITE.minSdk} · No internet permission
+        </p>
+    </div>
+</footer>
+
+<style>
+    .site-footer {
+        margin-top: clamp(3rem, 2rem + 4vw, 6rem);
+        border-top: 1px solid var(--line);
+        background: var(--surface);
+    }
+
+    .site-footer__inner {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2.5rem;
+        padding-block: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+    }
+
+    .site-footer__brand {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        margin-bottom: 0.9rem;
+    }
+
+    .site-footer__mark {
+        border-radius: 10px;
+        flex: none;
+    }
+
+    .site-footer__name {
+        font-weight: 700;
+        letter-spacing: -0.015em;
+    }
+
+    .site-footer__tagline {
+        color: var(--ink-2);
+        font-size: 0.92rem;
+        max-width: 46ch;
+    }
+
+    .site-footer__actions {
+        margin-top: 1.25rem;
+    }
+
+    .btn--sm {
+        padding: 0.55rem 0.95rem;
+        font-size: 0.86rem;
+    }
+
+    .site-footer__nav {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+        gap: 2rem;
+    }
+
+    .site-footer__heading {
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+        margin-bottom: 0.9rem;
+    }
+
+    .site-footer__col ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.55rem;
+    }
+
+    .site-footer__col a {
+        color: var(--ink-2);
+        text-decoration: none;
+        font-size: 0.9rem;
+    }
+
+    .site-footer__col a:hover {
+        color: var(--brand);
+        text-decoration: underline;
+    }
+
+    .site-footer__bottom {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 1.5rem;
+        justify-content: space-between;
+        padding-block: 1.25rem;
+        border-top: 1px solid var(--line);
+        font-size: 0.83rem;
+        color: var(--ink-3);
+    }
+
+    @media (min-width: 52rem) {
+        .site-footer__inner {
+            grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.6fr);
+            gap: 3.5rem;
+        }
+    }
+</style>
