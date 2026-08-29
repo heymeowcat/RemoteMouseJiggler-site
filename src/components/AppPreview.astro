@@ -1,0 +1,403 @@
+---
+/**
+ * A picture of the app's Mouse Jiggler screen, rebuilt from the real
+ * interface:
+ *
+ *   - the "Mouse Jiggler" title bar with a reset control
+ *   - the status card with the large start button
+ *   - the Run Duration card with the Infinite / Timed chips
+ *   - the Interval Speed and Movement Distance sliders
+ *   - the Movement Pattern header and the top of the pattern grid
+ *
+ * Every label is the app's own string resource and every value is the real
+ * default, so the picture cannot drift from the app without a deliberate
+ * edit. Colours are the app's Material 3 light and dark schemes, and the
+ * picture follows the site's own theme switch.
+ *
+ * It is a static picture, not a working simulator, so it is exposed to
+ * assistive technology as a single image.
+ */
+import PatternPreview from "./PatternPreview.astro";
+import { PATTERNS } from "../data/content";
+
+const INTERVAL_MIN = 0.2;
+const INTERVAL_MAX = 5.0;
+const INTERVAL_VALUE = 1.0;
+
+const DISTANCE_MIN = 2;
+const DISTANCE_MAX = 50;
+const DISTANCE_VALUE = 15;
+
+const intervalPct = ((INTERVAL_VALUE - INTERVAL_MIN) / (INTERVAL_MAX - INTERVAL_MIN)) * 100;
+const distancePct = ((DISTANCE_VALUE - DISTANCE_MIN) / (DISTANCE_MAX - DISTANCE_MIN)) * 100;
+
+/** Tick marks drawn inside the slider track, as the app's slider shows. */
+const TICKS = 18;
+const ticks = Array.from({ length: TICKS }, (_, i) => (i / (TICKS - 1)) * 100);
+---
+
+<figure class="pv-screen">
+    <div
+        class="pv-screen__device"
+        role="img"
+        aria-label="Preview of the Mouse Jiggler screen in Remote Mouse Jiggler. It shows the large start control with the Jiggler Idle status, a Run Duration card set to run until stopped with the Infinite option selected, an Interval Speed of one second, a Movement Distance of fifteen pixels, and the start of the Movement Pattern grid."
+    >
+        <!-- Title bar -->
+        <div class="pv-screen__bar">
+            <svg
+                class="pv-screen__bar-icon"
+                viewBox="0 0 24 24"
+                width="18"
+                height="18"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+            >
+                <path d="M19 12H5M11 18l-6-6 6-6"></path>
+            </svg>
+            <span class="pv-screen__bar-title">Mouse Jiggler</span>
+            <svg
+                class="pv-screen__bar-icon"
+                viewBox="0 0 24 24"
+                width="18"
+                height="18"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+            >
+                <path d="M20.5 12a8.5 8.5 0 1 1-2.5-6"></path>
+                <path d="M20.5 4v5h-5"></path>
+            </svg>
+        </div>
+
+        <div class="pv-screen__body">
+            <!-- Status card -->
+            <div class="pv-card pv-card--active pv-status">
+                <span class="pv-status__button">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true">
+                        <path d="M8 5.2v13.6a1 1 0 0 0 1.53.85l10.5-6.8a1 1 0 0 0 0-1.7L9.53 4.35A1 1 0 0 0 8 5.2z"></path>
+                    </svg>
+                </span>
+                <p class="pv-status__label">Jiggler Idle</p>
+                <p class="pv-status__meta">Moves: 0</p>
+            </div>
+
+            <!-- Run duration -->
+            <div class="pv-card">
+                <div class="pv-row">
+                    <span class="pv-row__label">Run Duration</span>
+                    <span class="pv-row__value">Until stopped</span>
+                </div>
+                <div class="pv-chips">
+                    <span class="pv-chip is-active">Infinite</span>
+                    <span class="pv-chip">Timed</span>
+                </div>
+            </div>
+
+            <!-- Interval speed -->
+            <div class="pv-card">
+                <div class="pv-row">
+                    <span class="pv-row__label">Interval Speed</span>
+                    <span class="pv-row__value pv-row__value--accent"
+                        >{INTERVAL_VALUE.toFixed(1)} sec</span
+                    >
+                </div>
+                <div class="pv-slider">
+                    <span class="pv-slider__track">
+                        {
+                            ticks.map((left) => (
+                                <span class="pv-slider__tick" style={`left:${left}%`} />
+                            ))
+                        }
+                        <span class="pv-slider__thumb" style={`left:${intervalPct}%`}
+                        ></span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Movement distance -->
+            <div class="pv-card">
+                <div class="pv-row">
+                    <span class="pv-row__label">Movement Distance</span>
+                    <span class="pv-row__value pv-row__value--accent"
+                        >{DISTANCE_VALUE} px</span
+                    >
+                </div>
+                <div class="pv-slider">
+                    <span class="pv-slider__track">
+                        {
+                            ticks.map((left) => (
+                                <span class="pv-slider__tick" style={`left:${left}%`} />
+                            ))
+                        }
+                        <span class="pv-slider__thumb" style={`left:${distancePct}%`}
+                        ></span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Pattern grid -->
+            <p class="pv-section-title">Movement Pattern</p>
+            <div class="pv-patterns">
+                {
+                    PATTERNS.slice(0, 2).map((pattern) => (
+                        <div class="pv-pattern">
+                            <PatternPreview
+                                pattern={pattern.id}
+                                class="pv-pattern__art"
+                            />
+                            <p class="pv-pattern__name">{pattern.name}</p>
+                            <p class="pv-pattern__desc">{pattern.short}</p>
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    </div>
+
+    <figcaption class="pv-screen__caption">
+        The Mouse Jiggler screen in Remote Mouse Jiggler
+    </figcaption>
+</figure>
+
+<style>
+    .pv-screen {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
+    }
+
+    .pv-screen__device {
+        position: relative;
+        width: 100%;
+        max-width: 19rem;
+        background: var(--pv-bg);
+        border: 1px solid var(--line);
+        border-radius: 1.35rem;
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
+    }
+
+    /* Suggests the screen continues below the fold. */
+    .pv-screen__device::after {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        bottom: 0;
+        height: 3.5rem;
+        background: linear-gradient(to bottom, transparent, var(--pv-bg));
+        pointer-events: none;
+    }
+
+    /* Title bar */
+    .pv-screen__bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding: 0.85rem 1rem;
+        color: var(--pv-ink);
+    }
+
+    .pv-screen__bar-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        letter-spacing: -0.015em;
+    }
+
+    .pv-screen__bar-icon {
+        color: var(--pv-ink-2);
+        flex: none;
+    }
+
+    /* Body */
+    .pv-screen__body {
+        padding: 0 0.85rem 0.85rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    /* Cards */
+    .pv-card {
+        background: var(--pv-surface);
+        border-radius: 1rem;
+        padding: 0.85rem 0.9rem;
+    }
+
+    .pv-card--active {
+        background: var(--pv-selected);
+    }
+
+    /* Status */
+    .pv-status {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1.1rem 0.9rem;
+    }
+
+    .pv-status__button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 3.6rem;
+        height: 3.6rem;
+        border-radius: 50%;
+        background: var(--pv-accent);
+        color: var(--pv-on-accent);
+        padding-left: 3px;
+    }
+
+    .pv-status__label {
+        margin-top: 0.7rem;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--pv-ink);
+    }
+
+    .pv-status__meta {
+        font-size: 0.8rem;
+        color: var(--pv-ink-2);
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Label / value rows */
+    .pv-row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.75rem;
+    }
+
+    .pv-row__label {
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: var(--pv-ink);
+    }
+
+    .pv-row__value {
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: var(--pv-ink);
+    }
+
+    .pv-row__value--accent {
+        color: var(--pv-accent);
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Chips */
+    .pv-chips {
+        display: flex;
+        gap: 0.45rem;
+        margin-top: 0.7rem;
+    }
+
+    .pv-chip {
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 0.35rem 0.9rem;
+        border-radius: 0.5rem;
+        border: 1px solid var(--pv-outline);
+        color: var(--pv-ink-2);
+    }
+
+    .pv-chip.is-active {
+        background: var(--pv-surface-2);
+        border-color: transparent;
+        color: var(--pv-accent);
+    }
+
+    /* Sliders */
+    .pv-slider {
+        margin-top: 0.75rem;
+        padding-left: 0.1rem;
+    }
+
+    .pv-slider__track {
+        position: relative;
+        display: block;
+        height: 0.75rem;
+        border-radius: var(--r-pill);
+        background: var(--pv-slider-track);
+    }
+
+    .pv-slider__tick {
+        position: absolute;
+        top: 50%;
+        width: 0.2rem;
+        height: 0.2rem;
+        margin: -0.1rem 0 0 -0.1rem;
+        border-radius: 50%;
+        background: var(--pv-slider-tick);
+    }
+
+    .pv-slider__thumb {
+        position: absolute;
+        top: -0.35rem;
+        bottom: -0.35rem;
+        width: 0.22rem;
+        margin-left: -0.11rem;
+        border-radius: var(--r-pill);
+        background: var(--pv-slider-thumb);
+    }
+
+    /* Pattern grid */
+    .pv-section-title {
+        margin-top: 0.35rem;
+        font-size: 0.95rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        color: var(--pv-accent);
+    }
+
+    .pv-patterns {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.5rem;
+    }
+
+    .pv-pattern {
+        background: var(--pv-surface);
+        border-radius: 0.9rem;
+        padding: 0.6rem 0.6rem 0.7rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+    }
+
+    .pv-pattern__art {
+        width: 100%;
+    }
+
+    .pv-pattern__name {
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: var(--pv-ink);
+        line-height: 1.25;
+    }
+
+    .pv-pattern__desc {
+        font-size: 0.66rem;
+        line-height: 1.35;
+        color: var(--pv-ink-2);
+    }
+
+    .pv-screen__caption {
+        font-size: 0.78rem;
+        color: var(--ink-3);
+        text-align: center;
+        max-width: 20rem;
+    }
+</style>

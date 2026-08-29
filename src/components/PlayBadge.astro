@@ -1,0 +1,70 @@
+---
+/**
+ * The official "Get it on Google Play" badge.
+ *
+ * Artwork is Google's own vector asset (play.google.com/intl/en_us/badges),
+ * self-hosted so it is cached with the rest of the site and does not depend
+ * on a third-party request.
+ */
+import { SITE } from "../data/site";
+
+interface Props {
+    size?: "sm" | "md" | "lg";
+    class?: string;
+}
+
+const { size = "md", class: className } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+
+<a
+    class:list={["play-badge", `play-badge--${size}`, className]}
+    href={SITE.playUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+>
+    <img
+        src={`${base}/google-play-badge.svg`}
+        alt="Get it on Google Play"
+        width="180"
+        height="53"
+        loading="lazy"
+        decoding="async"
+    />
+</a>
+
+<style>
+    .play-badge {
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none;
+        border-radius: var(--r-md);
+        transition:
+            transform 0.16s ease,
+            filter 0.16s ease;
+    }
+
+    .play-badge:hover {
+        transform: translateY(-2px);
+        filter: brightness(1.08);
+    }
+
+    .play-badge img {
+        display: block;
+        height: auto;
+        width: auto;
+        border-radius: 9px;
+    }
+
+    .play-badge--sm img {
+        width: 128px;
+    }
+
+    .play-badge--md img {
+        width: 150px;
+    }
+
+    .play-badge--lg img {
+        width: 172px;
+    }
+</style>
