@@ -1,0 +1,477 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageHero from "../components/PageHero.astro";
+import { SITE } from "../data/site";
+import {
+    MOUSE_GESTURES,
+    MOUSE_FEATURES,
+    KEYBOARD_FEATURES,
+    JIGGLER_CONTROLS,
+    JIGGLER_ENTRY_POINTS,
+    BLUETOOTH_FACTS,
+    RELIABILITY_FEATURES,
+    APPEARANCE_FEATURES,
+} from "../data/content";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const title = "Features";
+const description =
+    "Every feature in Remote Mouse Jiggler: trackpad and gyroscope air mouse, a virtual keyboard with adjustable typing speed, eight mouse jiggler patterns and a Bluetooth HID connection that needs nothing installed on your computer.";
+
+const sections = [
+    { id: "mouse", label: "Trackpad and air mouse" },
+    { id: "keyboard", label: "Virtual keyboard" },
+    { id: "jiggler", label: "Mouse jiggler" },
+    { id: "bluetooth", label: "Bluetooth connection" },
+    { id: "reliability", label: "Reliability" },
+    { id: "appearance", label: "Appearance" },
+    { id: "privacy", label: "Privacy" },
+];
+
+const privacyPoints = [
+    {
+        title: "No internet permission",
+        body: "The Android manifest does not include the INTERNET permission, so the app cannot open a network connection even if it wanted to. There is no server to call and nothing to log.",
+    },
+    {
+        title: "No accounts, no sign-in",
+        body: "There is no login, no profile and no email address. The app works entirely on your phone and over the Bluetooth link.",
+    },
+    {
+        title: "No telemetry or advertising",
+        body: "No analytics SDK, no crash reporter, no ad network and no tracking identifiers are bundled into the app.",
+    },
+    {
+        title: "Nothing is stored",
+        body: "Keystrokes, pointer positions and gyroscope samples exist only in memory while a session is running. Stopping a session discards them.",
+    },
+];
+
+const schema = [
+    {
+        "@type": "BreadcrumbList",
+        "@id": `${SITE.url}features/#breadcrumb`,
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: SITE.url,
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "Features",
+                item: `${SITE.url}features/`,
+            },
+        ],
+    },
+    {
+        "@type": "WebPage",
+        "@id": `${SITE.url}features/#webpage`,
+        url: `${SITE.url}features/`,
+        name: `${title} · ${SITE.name}`,
+        description,
+        isPartOf: { "@id": `${SITE.url}#website` },
+        breadcrumb: { "@id": `${SITE.url}features/#breadcrumb` },
+        about: { "@id": `${SITE.url}#app` },
+    },
+];
+---
+
+<Layout title={title} description={description} titleSuffix={title} schema={schema}>
+    <PageHero
+        eyebrow="Feature reference"
+        title="Everything the app actually does"
+        lead="No filler and no roadmap items. This is the complete list of what ships in version 1.0.4, taken straight from the app source."
+    />
+
+    <div class="container page-layout">
+        <nav class="page-nav" aria-label="On this page">
+            <h2 class="page-nav__heading">On this page</h2>
+            <ul>
+                {
+                    sections.map((section) => (
+                        <li>
+                            <a href={`#${section.id}`}>{section.label}</a>
+                        </li>
+                    ))
+                }
+            </ul>
+        </nav>
+
+        <div class="page-body">
+            <!-- ------------------------------------------------- mouse -- -->
+            <section class="block" id="mouse">
+                <h2>Trackpad and air mouse</h2>
+                <p class="block__lead">
+                    The touchpad turns the screen into a precise pointer. Every
+                    gesture maps to a real HID report, so the host sees ordinary
+                    mouse input rather than something it has to special-case.
+                </p>
+
+                <div class="table-wrap">
+                    <table>
+                        <caption class="visually-hidden">
+                            Touchpad gestures and the mouse actions they produce
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Gesture</th>
+                                <th scope="col">Action</th>
+                                <th scope="col">Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                MOUSE_GESTURES.map((gesture) => (
+                                    <tr>
+                                        <th scope="row">{gesture.gesture}</th>
+                                        <td>{gesture.action}</td>
+                                        <td>{gesture.detail}</td>
+                                    </tr>
+                                ))
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="grid grid--2 block__grid">
+                    {
+                        MOUSE_FEATURES.map((feature) => (
+                            <article class="card">
+                                <h3 class="card__title">{feature.title}</h3>
+                                <p class="card__body">{feature.body}</p>
+                                {feature.note && <p class="note">{feature.note}</p>}
+                            </article>
+                        ))
+                    }
+                </div>
+            </section>
+
+            <!-- ---------------------------------------------- keyboard -- -->
+            <section class="block" id="keyboard">
+                <h2>Virtual keyboard</h2>
+                <p class="block__lead">
+                    A text sheet plus a quick action row cover everything you need
+                    to type on a machine across the room.
+                </p>
+
+                <div class="grid grid--2 block__grid">
+                    {
+                        KEYBOARD_FEATURES.map((feature) => (
+                            <article class="card">
+                                <h3 class="card__title">{feature.title}</h3>
+                                <p class="card__body">{feature.body}</p>
+                            </article>
+                        ))
+                    }
+                </div>
+            </section>
+
+            <!-- ----------------------------------------------- jiggler -- -->
+            <section class="block" id="jiggler">
+                <h2>Mouse jiggler</h2>
+                <p class="block__lead">
+                    Eight movement patterns, precise timing controls and four ways
+                    to start a run. The
+                    <a href={`${base}/jiggler-patterns/`}>pattern guide</a> compares
+                    each one in detail.
+                </p>
+
+                <div class="table-wrap">
+                    <table>
+                        <caption class="visually-hidden">
+                            Jiggler controls and their ranges
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Control</th>
+                                <th scope="col">Range</th>
+                                <th scope="col">What it does</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                JIGGLER_CONTROLS.map((control) => (
+                                    <tr>
+                                        <th scope="row">{control.name}</th>
+                                        <td class="nowrap">{control.value}</td>
+                                        <td>{control.detail}</td>
+                                    </tr>
+                                ))
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Where you can start it</h3>
+                <ul class="ticks">
+                    {
+                        JIGGLER_ENTRY_POINTS.map((entry) => (
+                            <li>
+                                <strong>{entry.name}.</strong> {entry.detail}
+                            </li>
+                        ))
+                    }
+                </ul>
+            </section>
+
+            <!-- -------------------------------------------- bluetooth -- -->
+            <section class="block" id="bluetooth">
+                <h2>Bluetooth connection</h2>
+                <p class="block__lead">
+                    The app registers as a combo keyboard and mouse over the
+                    standard Bluetooth HID profile. The
+                    <a href={`${base}/bluetooth-hid/`}>how it works page</a> goes
+                    deeper on the protocol.
+                </p>
+
+                <div class="grid grid--2 block__grid">
+                    {
+                        BLUETOOTH_FACTS.map((fact) => (
+                            <article class="card">
+                                <h3 class="card__title">{fact.title}</h3>
+                                <p class="card__body">{fact.body}</p>
+                            </article>
+                        ))
+                    }
+                </div>
+            </section>
+
+            <!-- ------------------------------------------ reliability -- -->
+            <section class="block" id="reliability">
+                <h2>Reliability</h2>
+                <p class="block__lead">
+                    Long unattended sessions are the hard case, so the app is built
+                    around recovering from them.
+                </p>
+
+                <div class="grid grid--2 block__grid">
+                    {
+                        RELIABILITY_FEATURES.map((feature) => (
+                            <article class="card">
+                                <h3 class="card__title">{feature.title}</h3>
+                                <p class="card__body">{feature.body}</p>
+                            </article>
+                        ))
+                    }
+                </div>
+            </section>
+
+            <!-- ------------------------------------------ appearance -- -->
+            <section class="block" id="appearance">
+                <h2>Appearance</h2>
+                <p class="block__lead">
+                    The app follows your system theme by default and can be pinned
+                    to light or dark.
+                </p>
+
+                <div class="grid grid--3 block__grid">
+                    {
+                        APPEARANCE_FEATURES.map((feature) => (
+                            <article class="card">
+                                <h3 class="card__title">{feature.title}</h3>
+                                <p class="card__body">{feature.body}</p>
+                            </article>
+                        ))
+                    }
+                </div>
+            </section>
+
+            <!-- --------------------------------------------- privacy -- -->
+            <section class="block" id="privacy">
+                <h2>Privacy</h2>
+                <p class="block__lead">
+                    The privacy story is structural rather than a promise: the app
+                    is not capable of collecting the data it claims not to.
+                </p>
+
+                <div class="grid grid--2 block__grid">
+                    {
+                        privacyPoints.map((point) => (
+                            <article class="card">
+                                <h3 class="card__title">{point.title}</h3>
+                                <p class="card__body">{point.body}</p>
+                            </article>
+                        ))
+                    }
+                </div>
+
+                <p class="block__note">
+                    The <a href={`${base}/privacy/`}>privacy policy</a> covers the
+                    same ground in full, including the exact list of Android
+                    permissions the app requests and why.
+                </p>
+            </section>
+
+            <!-- ------------------------------------------------- cta -- -->
+            <div class="cta">
+                <div class="cta__copy">
+                    <h2>Try it on your phone</h2>
+                    <p>
+                        Free, no account, and nothing to install on the machine you
+                        want to control.
+                    </p>
+                </div>
+                <div class="btn-row cta__actions">
+                    <a
+                        class="btn btn--primary"
+                        href={SITE.playUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Get it on Google Play
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</Layout>
+
+<style>
+    .page-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2.5rem;
+        padding-block: clamp(2rem, 1.5rem + 2vw, 3.25rem);
+    }
+
+    .page-nav {
+        display: none;
+    }
+
+    .page-nav__heading {
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+        margin-bottom: 0.75rem;
+    }
+
+    .page-nav ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+    }
+
+    .page-nav a {
+        display: block;
+        font-size: 0.9rem;
+        color: var(--ink-2);
+        text-decoration: none;
+        padding: 0.2rem 0;
+    }
+
+    .page-nav a:hover {
+        color: var(--brand);
+    }
+
+    .block + .block {
+        margin-top: 3.5rem;
+        padding-top: 3.5rem;
+        border-top: 1px solid var(--line);
+    }
+
+    .block__lead {
+        margin-top: 0.75rem;
+        color: var(--ink-2);
+        max-width: 64ch;
+    }
+
+    .block__grid {
+        margin-top: 1.5rem;
+    }
+
+    .block h3 {
+        margin-top: 2rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .block__note {
+        margin-top: 1.5rem;
+        padding: 1rem 1.15rem;
+        border-radius: var(--r-md);
+        background: var(--brand-soft-2);
+        border: 1px solid var(--line);
+        font-size: 0.92rem;
+        color: var(--ink-2);
+    }
+
+    .note {
+        margin-top: 0.75rem;
+        font-size: 0.85rem;
+        color: var(--ink-3);
+    }
+
+    .ticks {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    .ticks li {
+        position: relative;
+        padding-left: 1.6rem;
+        color: var(--ink-2);
+        font-size: 0.94rem;
+    }
+
+    .ticks li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.55em;
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 50%;
+        background: var(--brand);
+        transform: translateY(-50%);
+    }
+
+    .ticks strong {
+        color: var(--ink);
+    }
+
+    .cta {
+        margin-top: 3.5rem;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--r-xl);
+        padding: clamp(1.5rem, 1.25rem + 1.5vw, 2.25rem);
+        display: grid;
+        gap: 1.25rem;
+        align-items: center;
+    }
+
+    .cta__copy p {
+        margin-top: 0.5rem;
+        color: var(--ink-2);
+    }
+
+    @media (min-width: 62rem) {
+        .page-layout {
+            grid-template-columns: 15rem minmax(0, 1fr);
+            gap: 3.5rem;
+            align-items: start;
+        }
+
+        .page-nav {
+            display: block;
+            position: sticky;
+            top: 6rem;
+        }
+
+        .cta {
+            grid-template-columns: minmax(0, 1fr) auto;
+        }
+    }
+</style>

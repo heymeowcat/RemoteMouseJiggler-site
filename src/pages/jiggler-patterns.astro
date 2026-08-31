@@ -1,0 +1,521 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageHero from "../components/PageHero.astro";
+import PatternPreview from "../components/PatternPreview.astro";
+import { SITE } from "../data/site";
+import { PATTERNS, JIGGLER_CONTROLS, JIGGLER_ENTRY_POINTS } from "../data/content";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const title = "Mouse jiggler patterns";
+const description =
+    "Compare all eight Remote Mouse Jiggler movement patterns: micro jitter, smooth circle, figure eight, random wander, sine wave, expanding spiral, diagonal bounce and a coding emulator that types real code.";
+
+const comparison = [
+    {
+        name: "Micro Jitter",
+        movement: "Alternating horizontal nudge",
+        visible: "Almost invisible",
+        shaped: "Repeating",
+        best: "Aggressive screen savers",
+    },
+    {
+        name: "Smooth Circle",
+        movement: "Continuous rotation",
+        visible: "Clearly visible",
+        shaped: "Repeating",
+        best: "Long unattended sessions",
+    },
+    {
+        name: "Figure Eight",
+        movement: "Infinity loop",
+        visible: "Clearly visible",
+        shaped: "Repeating",
+        best: "Looking human rather than robotic",
+    },
+    {
+        name: "Random Wander",
+        movement: "Unpredictable roaming",
+        visible: "Clearly visible",
+        shaped: "No shape",
+        best: "Anti-idle checks for repeating motion",
+    },
+    {
+        name: "Sine Wave",
+        movement: "Side to side with a ripple",
+        visible: "Clearly visible",
+        shaped: "Repeating",
+        best: "Savers that ignore horizontal motion",
+    },
+    {
+        name: "Expanding Spiral",
+        movement: "Outward spiral with a reset",
+        visible: "Clearly visible",
+        shaped: "Repeating",
+        best: "Demonstrating real animation",
+    },
+    {
+        name: "Diagonal Bounce",
+        movement: "Corner to corner",
+        visible: "Clearly visible",
+        shaped: "Repeating",
+        best: "Hosts that need diagonal input",
+    },
+    {
+        name: "Coding Emulator",
+        movement: "Types code with typos",
+        visible: "Types into the focused window",
+        shaped: "Scripted",
+        best: "IDE and terminal sessions",
+    },
+];
+
+const choosing = [
+    {
+        title: "Start with Micro Jitter",
+        body: "If you are not sure which pattern to use, this is the one. Set the distance to 2 pixels and the pointer will look perfectly still to anyone watching, while the host still receives genuine mouse movement on a schedule.",
+    },
+    {
+        title: "Turn the distance down before you turn the pattern up",
+        body: "A larger movement distance is far more noticeable than a change of pattern. If a pattern looks distracting, drop the distance rather than switching to something subtler.",
+    },
+    {
+        title: "Shorten the interval for stubborn hosts",
+        body: "Some systems only count activity that arrives at least once every few seconds. Dropping the interval from 1 second to 0.2 to 0.5 seconds makes the difference without needing a bigger movement.",
+    },
+    {
+        title: "Close everything first for the Coding Emulator",
+        body: "The coding emulator sends real keystrokes, so they land in whichever window has focus. It is ideal for an editor or a terminal that is already open and nothing else.",
+    },
+];
+
+const schema = [
+    {
+        "@type": "BreadcrumbList",
+        "@id": `${SITE.url}jiggler-patterns/#breadcrumb`,
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: SITE.url,
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "Jiggler patterns",
+                item: `${SITE.url}jiggler-patterns/`,
+            },
+        ],
+    },
+    {
+        "@type": "ItemList",
+        "@id": `${SITE.url}jiggler-patterns/#list`,
+        name: "Remote Mouse Jiggler movement patterns",
+        numberOfItems: PATTERNS.length,
+        itemListOrder: "https://schema.org/ItemListOrderAscending",
+        itemListElement: PATTERNS.map((pattern, index) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            name: pattern.name,
+            description: pattern.desc,
+        })),
+    },
+    {
+        "@type": "WebPage",
+        "@id": `${SITE.url}jiggler-patterns/#webpage`,
+        url: `${SITE.url}jiggler-patterns/`,
+        name: `${title} · ${SITE.name}`,
+        description,
+        isPartOf: { "@id": `${SITE.url}#website` },
+        breadcrumb: { "@id": `${SITE.url}jiggler-patterns/#breadcrumb` },
+        about: { "@id": `${SITE.url}#app` },
+    },
+];
+---
+
+<Layout title={title} description={description} titleSuffix={title} schema={schema}>
+    <PageHero
+        eyebrow="Mouse jiggler"
+        title="Eight movement patterns, explained"
+        lead="A mouse jiggler keeps a computer awake by sending real mouse movement over the Bluetooth link. These are the eight profiles the app ships with, and what each one is actually good for."
+    />
+
+    <div class="container page">
+        <!-- ------------------------------------------------------ intro -- -->
+        <section class="intro">
+            <h2>How a Bluetooth mouse jiggler works</h2>
+            <div class="intro__body">
+                <p>
+                    Operating systems dim the screen, lock the session or drop the
+                    connection when they believe nobody is using the machine. They
+                    decide that from input activity, and a mouse jiggler answers
+                    that check by sending genuine relative mouse movement on a
+                    timer.
+                </p>
+                <p>
+                    Because Remote Mouse Jiggler sends that movement over the
+                    standard Bluetooth HID profile, the host treats it exactly like
+                    a physical wireless mouse. There is no driver, no background
+                    agent and no software to install on the computer, and no
+                    particular screen saver can tell the difference between a
+                    jiggler and a person who keeps twitching their mouse.
+                </p>
+                <p>
+                    The only variable is the shape of the movement, which is what
+                    the eight patterns below change.
+                </p>
+            </div>
+        </section>
+
+        <!-- ---------------------------------------------------- patterns -- -->
+        <section class="patterns">
+            <h2>The eight patterns</h2>
+
+            <ol class="pattern-list">
+                {
+                    PATTERNS.map((pattern) => (
+                        <li class="pattern-card">
+                            <div class="pattern-card__art">
+                                <PatternPreview
+                                    pattern={pattern.id}
+                                    class="pattern-card__preview"
+                                />
+                            </div>
+
+                            <div class="pattern-card__head">
+                                <h3 class="pattern-card__name">{pattern.name}</h3>
+                                <span
+                                    class:list={[
+                                        "chip",
+                                        pattern.tag === "Signature"
+                                            ? "chip--accent"
+                                            : pattern.tag === "Screen saver"
+                                              ? "chip--ok"
+                                              : "chip--brand",
+                                    ]}
+                                >
+                                    {pattern.tag}
+                                </span>
+                            </div>
+
+                            <p class="pattern-card__short">{pattern.short}</p>
+                            <p class="pattern-card__desc">{pattern.desc}</p>
+
+                            <div class="pattern-card__detail">
+                                <h4>How it behaves</h4>
+                                <p>{pattern.detail}</p>
+                            </div>
+
+                            <p class="pattern-card__best">
+                                <span class="pattern-card__best-label">Best for</span>
+                                {pattern.best}
+                            </p>
+                        </li>
+                    ))
+                }
+            </ol>
+        </section>
+
+        <!-- -------------------------------------------------- comparison -- -->
+        <section class="section-block">
+            <h2>At a glance</h2>
+            <div class="table-wrap">
+                <table>
+                    <caption class="visually-hidden">
+                        Comparison of the eight mouse jiggler patterns
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Pattern</th>
+                            <th scope="col">Movement</th>
+                            <th scope="col">Visibility</th>
+                            <th scope="col">Shape</th>
+                            <th scope="col">Best for</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            comparison.map((row) => (
+                                <tr>
+                                    <th scope="row">{row.name}</th>
+                                    <td>{row.movement}</td>
+                                    <td>{row.visible}</td>
+                                    <td>{row.shaped}</td>
+                                    <td>{row.best}</td>
+                                </tr>
+                            ))
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ---------------------------------------------------- controls -- -->
+        <section class="section-block">
+            <h2>Controls</h2>
+            <p class="section-block__lead">
+                The same four controls apply to every pattern.
+            </p>
+            <div class="table-wrap">
+                <table>
+                    <caption class="visually-hidden">
+                        Jiggler controls and their ranges
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Control</th>
+                            <th scope="col">Range</th>
+                            <th scope="col">What it does</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            JIGGLER_CONTROLS.map((control) => (
+                                <tr>
+                                    <th scope="row">{control.name}</th>
+                                    <td class="nowrap">{control.value}</td>
+                                    <td>{control.detail}</td>
+                                </tr>
+                            ))
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Starting a run</h3>
+            <ul class="ticks">
+                {
+                    JIGGLER_ENTRY_POINTS.map((entry) => (
+                        <li>
+                            <strong>{entry.name}.</strong> {entry.detail}
+                        </li>
+                    ))
+                }
+            </ul>
+        </section>
+
+        <!-- ---------------------------------------------------- choosing -- -->
+        <section class="section-block">
+            <h2>Choosing a pattern</h2>
+            <div class="grid grid--2">
+                {
+                    choosing.map((tip) => (
+                        <article class="card">
+                            <h3 class="card__title">{tip.title}</h3>
+                            <p class="card__body">{tip.body}</p>
+                        </article>
+                    ))
+                }
+            </div>
+        </section>
+
+        <!-- ------------------------------------------------------- cta -- -->
+        <div class="cta">
+            <div class="cta__copy">
+                <h2>Try all eight patterns</h2>
+                <p>
+                    Free on Google Play, with no account, no ads and no internet
+                    permission.
+                </p>
+            </div>
+            <div class="btn-row cta__actions">
+                <a
+                    class="btn btn--primary"
+                    href={SITE.playUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Get it on Google Play
+                </a>
+                <a class="btn btn--ghost" href={`${base}/faq/`}>Read the FAQ</a>
+            </div>
+        </div>
+    </div>
+</Layout>
+
+<style>
+    .page {
+        padding-block: clamp(2rem, 1.5rem + 2vw, 3.25rem);
+    }
+
+    .intro__body {
+        max-width: var(--prose);
+        margin-top: 1rem;
+        color: var(--ink-2);
+    }
+
+    .intro__body p + p {
+        margin-top: 1rem;
+    }
+
+    .patterns {
+        margin-top: 3rem;
+    }
+
+    .pattern-list {
+        list-style: none;
+        margin: 1.5rem 0 0;
+        padding: 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+        gap: 1.25rem;
+    }
+
+    .pattern-card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--r-lg);
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .pattern-card__art {
+        background: var(--pv-bg);
+        border-radius: var(--r-md);
+        padding: 0.75rem 0.75rem 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .pattern-card__preview {
+        width: 100%;
+    }
+
+    .pattern-card__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .pattern-card__name {
+        font-size: 1.1rem;
+    }
+
+    .pattern-card__short {
+        font-weight: 600;
+        color: var(--ink);
+        font-size: 0.95rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .pattern-card__desc {
+        color: var(--ink-2);
+        font-size: 0.93rem;
+    }
+
+    .pattern-card__detail {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--line);
+    }
+
+    .pattern-card__detail h4 {
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+        margin-bottom: 0.4rem;
+    }
+
+    .pattern-card__detail p {
+        font-size: 0.9rem;
+        color: var(--ink-2);
+        line-height: 1.6;
+    }
+
+    .pattern-card__best {
+        margin-top: auto;
+        padding-top: 1rem;
+        font-size: 0.86rem;
+        color: var(--ink-2);
+    }
+
+    .pattern-card__best-label {
+        display: block;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+        margin-bottom: 0.15rem;
+    }
+
+    .section-block {
+        margin-top: 3.5rem;
+        padding-top: 3.5rem;
+        border-top: 1px solid var(--line);
+    }
+
+    .section-block__lead {
+        margin-top: 0.75rem;
+        color: var(--ink-2);
+        max-width: var(--prose);
+    }
+
+    .section-block .table-wrap {
+        margin-top: 1.25rem;
+    }
+
+    .section-block h3 {
+        margin-top: 2rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .ticks {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    .ticks li {
+        position: relative;
+        padding-left: 1.6rem;
+        color: var(--ink-2);
+        font-size: 0.94rem;
+    }
+
+    .ticks li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.55em;
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 50%;
+        background: var(--brand);
+        transform: translateY(-50%);
+    }
+
+    .ticks strong {
+        color: var(--ink);
+    }
+
+    .cta {
+        margin-top: 3.5rem;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--r-xl);
+        padding: clamp(1.5rem, 1.25rem + 1.5vw, 2.25rem);
+        display: grid;
+        gap: 1.25rem;
+        align-items: center;
+    }
+
+    .cta__copy p {
+        margin-top: 0.5rem;
+        color: var(--ink-2);
+    }
+
+    @media (min-width: 62rem) {
+        .cta {
+            grid-template-columns: minmax(0, 1fr) auto;
+        }
+    }
+</style>
