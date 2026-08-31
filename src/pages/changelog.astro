@@ -1,0 +1,209 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageHero from "../components/PageHero.astro";
+import { SITE } from "../data/site";
+import { CHANGELOG } from "../data/content";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const title = "Changelog";
+const description =
+    "Every release of Remote Mouse Jiggler for Android, from the first public build through version 1.0.4: new features, reliability fixes and privacy changes.";
+
+const typeClass: Record<string, string> = {
+    Added: "chip--ok",
+    Fixed: "chip--accent",
+    Improved: "chip--brand",
+    Changed: "chip--brand",
+};
+
+const schema = [
+    {
+        "@type": "BreadcrumbList",
+        "@id": `${SITE.url}changelog/#breadcrumb`,
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: SITE.url,
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "Changelog",
+                item: `${SITE.url}changelog/`,
+            },
+        ],
+    },
+    {
+        "@type": "WebPage",
+        "@id": `${SITE.url}changelog/#webpage`,
+        url: `${SITE.url}changelog/`,
+        name: `${title} · ${SITE.name}`,
+        description,
+        isPartOf: { "@id": `${SITE.url}#website` },
+        breadcrumb: { "@id": `${SITE.url}changelog/#breadcrumb` },
+        about: { "@id": `${SITE.url}#app` },
+    },
+];
+---
+
+<Layout title={title} description={description} titleSuffix={title} schema={schema}>
+    <PageHero
+        eyebrow="Releases"
+        title="Changelog"
+        lead="New features, reliability fixes and privacy changes, newest first."
+    />
+
+    <div class="container page">
+        <ol class="versions">
+            {
+                CHANGELOG.map((release) => (
+                    <li class="release">
+                        <div class="release__head">
+                            <h2 class="release__version">{release.version}</h2>
+                            <time class="release__date" datetime={release.date}>
+                                {release.date}
+                            </time>
+                        </div>
+
+                        <p class="release__summary">{release.summary}</p>
+
+                        <ul class="release__changes">
+                            {release.changes.map((change) => (
+                                <li>
+                                    <span
+                                        class:list={[
+                                            "chip",
+                                            typeClass[change.type] ?? "chip--brand",
+                                        ]}
+                                    >
+                                        {change.type}
+                                    </span>
+                                    <span>{change.text}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </li>
+                ))
+            }
+        </ol>
+
+        <div class="cta">
+            <div class="cta__copy">
+                <h2>Get the latest version</h2>
+                <p>
+                    Updates install from Google Play automatically, so there is
+                    nothing to track.
+                </p>
+            </div>
+            <div class="btn-row cta__actions">
+                <a
+                    class="btn btn--primary"
+                    href={SITE.playUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Get it on Google Play
+                </a>
+                <a class="btn btn--ghost" href={`${base}/download/`}>
+                    Download details
+                </a>
+            </div>
+        </div>
+    </div>
+</Layout>
+
+<style>
+    .page {
+        padding-block: clamp(2rem, 1.5rem + 2vw, 3.25rem);
+    }
+
+    .versions {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+        max-width: 52rem;
+    }
+
+    .release {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--r-lg);
+        padding: 1.5rem;
+    }
+
+    .release__head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .release__version {
+        font-size: 1.25rem;
+    }
+
+    .release__date {
+        font-size: 0.85rem;
+        color: var(--ink-3);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .release__summary {
+        margin-top: 0.35rem;
+        color: var(--ink-2);
+        font-size: 0.97rem;
+    }
+
+    .release__changes {
+        list-style: none;
+        margin: 1.1rem 0 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.7rem;
+        border-top: 1px solid var(--line);
+        padding-top: 1.1rem;
+    }
+
+    .release__changes li {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.7rem;
+        font-size: 0.93rem;
+        color: var(--ink-2);
+        line-height: 1.6;
+    }
+
+    .release__changes .chip {
+        margin-top: 0.15rem;
+    }
+
+    .cta {
+        margin-top: 3.5rem;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--r-xl);
+        padding: clamp(1.5rem, 1.25rem + 1.5vw, 2.25rem);
+        display: grid;
+        gap: 1.25rem;
+        align-items: center;
+    }
+
+    .cta__copy p {
+        margin-top: 0.5rem;
+        color: var(--ink-2);
+    }
+
+    @media (min-width: 62rem) {
+        .cta {
+            grid-template-columns: minmax(0, 1fr) auto;
+        }
+    }
+</style>
