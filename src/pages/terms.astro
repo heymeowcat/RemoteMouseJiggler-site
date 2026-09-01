@@ -1,0 +1,195 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { SITE } from "../data/site";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const title = "Terms of Service";
+const description =
+    "The terms of use for the Remote Mouse Jiggler Android application: licence, acceptable use, hardware compatibility, intellectual property, warranty and liability.";
+
+const updated = new Date().toLocaleDateString("en-GB", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+});
+
+const schema = [
+    {
+        "@type": "BreadcrumbList",
+        "@id": `${SITE.url}terms/#breadcrumb`,
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: SITE.url,
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "Terms of service",
+                item: `${SITE.url}terms/`,
+            },
+        ],
+    },
+    {
+        "@type": "WebPage",
+        "@id": `${SITE.url}terms/#webpage`,
+        url: `${SITE.url}terms/`,
+        name: `${title} · ${SITE.name}`,
+        description,
+        isPartOf: { "@id": `${SITE.url}#website` },
+        breadcrumb: { "@id": `${SITE.url}terms/#breadcrumb` },
+    },
+];
+---
+
+<Layout title={title} description={description} titleSuffix={title} schema={schema}>
+    <div class="container legal">
+        <nav class="legal__crumbs" aria-label="Breadcrumb">
+            <a href={`${base}/`}>Home</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Terms of service</span>
+        </nav>
+
+        <header class="legal__head">
+            <p class="eyebrow">Legal</p>
+            <h1>Terms of Service</h1>
+            <p class="legal__updated">Last updated: {updated}</p>
+        </header>
+
+        <div class="legal__body prose">
+            <p>
+                These terms govern your use of the Remote Mouse Jiggler Android
+                application (package: <code>{SITE.packageName}</code>), developed
+                by <strong>{SITE.developerName}</strong> ({SITE.developer}). By
+                installing or using the application you agree to these terms. If
+                you do not agree, please do not use the application.
+            </p>
+
+            <h2>1. Licence and permitted use</h2>
+            <p>
+                The application is provided free of charge for personal and
+                commercial use. You may use it to control any Bluetooth host you
+                own or are authorised to control. The app name, icon and branding
+                remain the property of the developer.
+            </p>
+
+            <h2>2. Responsibility and compliance</h2>
+            <p>
+                You are responsible for how you use the application, including
+                anything typed through the virtual keyboard or triggered by the
+                automated jiggler and its coding emulator. Do not use the
+                application to defeat security controls, evade monitoring that you
+                are not permitted to evade, or gain unauthorised access to any
+                system. Where a mouse jiggler is prohibited by the policies of
+                your employer or the owner of a machine, you are responsible for
+                complying with those policies.
+            </p>
+
+            <h2>3. Hardware and Bluetooth compatibility</h2>
+            <p>
+                The application relies on the Bluetooth Human Interface Device
+                profile. Whether a particular host accepts it depends on that
+                host's Bluetooth stack and configuration, which is outside the
+                developer's control. Some hosts require the pairing to be
+                completed from the host side, and some do not accept a combined
+                keyboard and mouse device at all. The application is provided
+                as is, without any guarantee that it will pair with every device.
+            </p>
+
+            <h2>4. Intellectual property</h2>
+            <p>
+                The application, its name and its icon are the property of the
+                developer. Unless stated otherwise, all content on this website,
+                including the written copy and the brand assets, may be reproduced
+                for editorial and informational purposes with attribution and a
+                link back to this site. Please ask before using the name or the
+                icon in a way that implies an official endorsement.
+            </p>
+
+            <h2>5. Disclaimer of warranties</h2>
+            <p>
+                The application and this website are provided "as is", without
+                warranty of any kind, express or implied, including but not
+                limited to the warranties of merchantability, fitness for a
+                particular purpose and non-infringement. The developer does not
+                warrant that the application will be uninterrupted, error free or
+                compatible with any particular device or host.
+            </p>
+
+            <h2>6. Limitation of liability</h2>
+            <p>
+                To the maximum extent permitted by applicable law, the developer
+                shall not be liable for any indirect, incidental, special,
+                consequential or punitive damages, or for any loss of data, loss
+                of profits, loss of goodwill or business interruption, arising out
+                of or in connection with the application or this website, whether
+                in contract, tort or otherwise, even if the developer has been
+                advised of the possibility of such damages.
+            </p>
+
+            <h2>7. Privacy</h2>
+            <p>
+                The application collects no personal data and requests no Android
+                internet permission. The
+                <a href={`${base}/privacy/`}>privacy policy</a> sets out the full
+                details, including every permission the app asks for and why.
+            </p>
+
+            <h2>8. Changes to these terms</h2>
+            <p>
+                These terms may be updated as the application changes. The current
+                version is always published on this page with its date. Continued
+                use of the application after an update constitutes acceptance of
+                the revised terms.
+            </p>
+
+            <h2>9. Contact</h2>
+            <p>
+                Questions about these terms can be sent to
+                <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+            </p>
+        </div>
+    </div>
+</Layout>
+
+<style>
+    .legal {
+        padding-block: clamp(2rem, 1.5rem + 2vw, 3rem) clamp(3rem, 2rem + 3vw, 4rem);
+    }
+
+    .legal__crumbs {
+        display: flex;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        color: var(--ink-3);
+        margin-bottom: 1.5rem;
+    }
+
+    .legal__crumbs a {
+        color: var(--ink-2);
+        text-decoration: none;
+    }
+
+    .legal__crumbs a:hover {
+        color: var(--brand);
+    }
+
+    .legal__head {
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--line);
+        margin-bottom: 2rem;
+    }
+
+    .legal__updated {
+        margin-top: 0.5rem;
+        font-size: 0.88rem;
+        color: var(--ink-3);
+    }
+
+    .legal__body {
+        max-width: 72ch;
+    }
+</style>

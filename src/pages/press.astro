@@ -1,0 +1,339 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageHero from "../components/PageHero.astro";
+import Brand from "../components/Brand.astro";
+import { SITE } from "../data/site";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const title = "Press kit";
+const description =
+    "Brand assets, an app description and the key facts for Remote Mouse Jiggler, the free Android Bluetooth mouse, keyboard and mouse jiggler.";
+
+const facts = [
+    { label: "App name", value: SITE.name },
+    { label: "Developer", value: `${SITE.developerName} (${SITE.developer})` },
+    { label: "Platform", value: "Android 9.0 and newer" },
+    { label: "Current version", value: SITE.version },
+    { label: "Package", value: SITE.packageName },
+    { label: "Price", value: "Free" },
+    { label: "Ads", value: "None" },
+    { label: "Category", value: "Utilities" },
+];
+
+const boilerplate = `Remote Mouse Jiggler is a free Android app that turns a phone into a Bluetooth mouse, keyboard and automated mouse jiggler. It connects to any computer, TV or other device that speaks the standard Bluetooth HID profile, so nothing has to be installed on the machine being controlled. The app includes a precision touchpad, a gyroscope air mouse, a virtual keyboard, and a mouse jiggler with eight movement patterns — including a coding emulator that types realistic lines of code with human-like typos and corrections. It requests no internet permission, collects no data, and shows no ads.`;
+
+const schema = [
+    {
+        "@type": "BreadcrumbList",
+        "@id": `${SITE.url}press/#breadcrumb`,
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: SITE.url,
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "Press kit",
+                item: `${SITE.url}press/`,
+            },
+        ],
+    },
+    {
+        "@type": "WebPage",
+        "@id": `${SITE.url}press/#webpage`,
+        url: `${SITE.url}press/`,
+        name: `${title} · ${SITE.name}`,
+        description,
+        isPartOf: { "@id": `${SITE.url}#website` },
+        breadcrumb: { "@id": `${SITE.url}press/#breadcrumb` },
+    },
+];
+---
+
+<Layout title={title} description={description} titleSuffix={title} schema={schema}>
+    <PageHero
+        eyebrow="Press kit"
+        title="Brand assets and app facts"
+        lead="Everything needed to write about, link to or illustrate Remote Mouse Jiggler. Use it freely with attribution."
+    />
+
+    <div class="container page">
+        <div class="two-col">
+            <!-- ------------------------------------------------- assets -- -->
+            <section class="block">
+                <h2>Icon</h2>
+                <p class="block__lead">
+                    The app icon: a yellow duck on the brand blue. Available as a
+                    512 pixel PNG with a transparent-ready square crop.
+                </p>
+
+                <div class="asset">
+                    <div class="asset__preview">
+                        <Brand
+                            size={104}
+                            class="asset__img"
+                            alt="Remote Mouse Jiggler app icon: a yellow duck on a blue background"
+                            loading="eager"
+                        />
+                    </div>
+                    <div class="asset__body">
+                        <p class="asset__name">remote-mouse-jiggler-logo.png</p>
+                        <p class="asset__meta">512 × 512 PNG · 26 KB</p>
+                        <a
+                            class="btn btn--ghost"
+                            href={`${base}/press/logo-512.png`}
+                            download="remote-mouse-jiggler-logo.png"
+                        >
+                            Download icon
+                        </a>
+                    </div>
+                </div>
+
+                <h3>Colour</h3>
+                <ul class="swatches">
+                    <li class="swatch">
+                        <span
+                            class="swatch__chip"
+                            style="background:#3f19bc"
+                            aria-hidden="true"
+                        ></span>
+                        <span class="swatch__name">Brand blue</span>
+                        <code>#3F19BC</code>
+                    </li>
+                    <li class="swatch">
+                        <span
+                            class="swatch__chip"
+                            style="background:#ffb700"
+                            aria-hidden="true"
+                        ></span>
+                        <span class="swatch__name">Duck yellow</span>
+                        <code>#FFB700</code>
+                    </li>
+                </ul>
+
+                <h3>Favicon</h3>
+                <p class="block__lead">
+                    An SVG favicon using the same artwork is available at
+                    <a href={`${base}/favicon.svg`}>/favicon.svg</a>.
+                </p>
+            </section>
+
+            <!-- -------------------------------------------------- facts -- -->
+            <section class="block">
+                <h2>Key facts</h2>
+                <div class="table-wrap">
+                    <table>
+                        <caption class="visually-hidden">
+                            Key facts about the Remote Mouse Jiggler app
+                        </caption>
+                        <tbody>
+                            {
+                                facts.map((fact) => (
+                                    <tr>
+                                        <th scope="row">{fact.label}</th>
+                                        <td>{fact.value}</td>
+                                    </tr>
+                                ))
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Description</h3>
+                <p class="block__lead">{boilerplate}</p>
+
+                <h3>Links</h3>
+                <ul class="ticks">
+                    <li>
+                        <strong>Website:</strong>
+                        <a href={SITE.url}>{SITE.url}</a>
+                    </li>
+                    <li>
+                        <strong>Google Play:</strong>
+                        <a href={SITE.playUrl} target="_blank" rel="noopener noreferrer"
+                            >{SITE.playUrl}</a
+                        >
+                    </li>
+                    <li>
+                        <strong>Developer:</strong>
+                        <a href={SITE.developerUrl} target="_blank" rel="noopener noreferrer"
+                            >{SITE.developerUrl}</a
+                        >
+                    </li>
+                    <li>
+                        <strong>Contact:</strong>
+                        <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+                    </li>
+                </ul>
+            </section>
+        </div>
+
+        <div class="cta">
+            <div class="cta__copy">
+                <h2>Writing about the app?</h2>
+                <p>
+                    Email <a href={`mailto:${SITE.email}`}>{SITE.email}</a> for a
+                    quote, a demo or a specific question. Feature requests and bug
+                    reports are welcome too.
+                </p>
+            </div>
+            <div class="btn-row cta__actions">
+                <a class="btn btn--ghost" href={`${base}/download/`}>Get the app</a>
+            </div>
+        </div>
+    </div>
+</Layout>
+
+<style>
+    .page {
+        padding-block: clamp(2rem, 1.5rem + 2vw, 3.25rem);
+    }
+
+    .two-col {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2.5rem;
+    }
+
+    .block__lead {
+        margin-top: 0.75rem;
+        color: var(--ink-2);
+        max-width: 62ch;
+    }
+
+    .block h3 {
+        margin-top: 2rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .asset {
+        margin-top: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        padding: 1.25rem;
+        border: 1px solid var(--line);
+        border-radius: var(--r-lg);
+        background: var(--surface);
+        flex-wrap: wrap;
+    }
+
+    .asset__preview {
+        padding: 0.9rem;
+        border-radius: var(--r-lg);
+        background: var(--surface-2);
+        border: 1px solid var(--line);
+    }
+
+    .asset__img {
+        border-radius: 22px;
+    }
+
+    .asset__name {
+        font-weight: 650;
+        font-size: 0.95rem;
+    }
+
+    .asset__meta {
+        font-size: 0.82rem;
+        color: var(--ink-3);
+        margin-bottom: 0.75rem;
+    }
+
+    .swatches {
+        list-style: none;
+        margin: 1rem 0 0;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .swatch {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        padding: 0.5rem 0.85rem;
+        border: 1px solid var(--line);
+        border-radius: var(--r-md);
+        background: var(--surface);
+        font-size: 0.86rem;
+    }
+
+    .swatch__chip {
+        width: 1.1rem;
+        height: 1.1rem;
+        border-radius: 5px;
+        border: 1px solid rgb(0 0 0 / 0.12);
+        flex: none;
+    }
+
+    .swatch__name {
+        font-weight: 600;
+    }
+
+    .ticks {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    .ticks li {
+        position: relative;
+        padding-left: 1.6rem;
+        color: var(--ink-2);
+        font-size: 0.94rem;
+        word-break: break-word;
+    }
+
+    .ticks li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.55em;
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 50%;
+        background: var(--brand);
+        transform: translateY(-50%);
+    }
+
+    .ticks strong {
+        color: var(--ink);
+    }
+
+    .cta {
+        margin-top: 3.5rem;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--r-xl);
+        padding: clamp(1.5rem, 1.25rem + 1.5vw, 2.25rem);
+        display: grid;
+        gap: 1.25rem;
+        align-items: center;
+    }
+
+    .cta__copy p {
+        margin-top: 0.5rem;
+        color: var(--ink-2);
+        max-width: 62ch;
+    }
+
+    @media (min-width: 62rem) {
+        .two-col {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 3.5rem;
+        }
+
+        .cta {
+            grid-template-columns: minmax(0, 1fr) auto;
+        }
+    }
+</style>

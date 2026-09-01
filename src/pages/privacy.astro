@@ -1,0 +1,287 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { SITE } from "../data/site";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const title = "Privacy Policy";
+const description =
+    "The Remote Mouse Jiggler privacy policy: zero data collection, no internet permission, the exact list of Android permissions the app requests and why, and how to contact the developer.";
+
+const updated = new Date().toLocaleDateString("en-GB", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+});
+
+const permissions = [
+    {
+        name: "BLUETOOTH_CONNECT",
+        purpose:
+            "Connect to the paired computer, TV or receiver over the Bluetooth HID profile.",
+    },
+    {
+        name: "BLUETOOTH_SCAN",
+        purpose:
+            "Discover nearby Bluetooth devices to pair with. Declared with the neverForLocation flag, so it cannot be used to derive your physical location.",
+    },
+    {
+        name: "FOREGROUND_SERVICE",
+        purpose:
+            "Run the connection service in the foreground so the HID link survives while you use other apps.",
+    },
+    {
+        name: "FOREGROUND_SERVICE_CONNECTED_DEVICE",
+        purpose:
+            "Type the foreground service correctly for a long-running connection to an external device.",
+    },
+    {
+        name: "POST_NOTIFICATIONS",
+        purpose:
+            "Show the ongoing connection notification and expose the Quick Settings tile.",
+    },
+    {
+        name: "RECEIVE_BOOT_COMPLETED",
+        purpose:
+            "Restart the connection after a reboot when you have selected an auto-connect device.",
+    },
+    {
+        name: "BLUETOOTH, BLUETOOTH_ADMIN",
+        purpose:
+            "Requested only on Android 11 and older, where the modern Bluetooth permissions do not exist. Declared with a maximum SDK version so they are not requested on current devices.",
+    },
+    {
+        name: "ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION",
+        purpose:
+            "Requested only on Android 11 and older, where Bluetooth discovery required location permission. Location data is never accessed, tracked or stored.",
+    },
+];
+
+const schema = [
+    {
+        "@type": "BreadcrumbList",
+        "@id": `${SITE.url}privacy/#breadcrumb`,
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: SITE.url,
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "Privacy policy",
+                item: `${SITE.url}privacy/`,
+            },
+        ],
+    },
+    {
+        "@type": "WebPage",
+        "@id": `${SITE.url}privacy/#webpage`,
+        url: `${SITE.url}privacy/`,
+        name: `${title} · ${SITE.name}`,
+        description,
+        isPartOf: { "@id": `${SITE.url}#website` },
+        breadcrumb: { "@id": `${SITE.url}privacy/#breadcrumb` },
+    },
+];
+---
+
+<Layout title={title} description={description} titleSuffix={title} schema={schema}>
+    <div class="container legal">
+        <nav class="legal__crumbs" aria-label="Breadcrumb">
+            <a href={`${base}/`}>Home</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Privacy policy</span>
+        </nav>
+
+        <header class="legal__head">
+            <p class="eyebrow">Legal</p>
+            <h1>Privacy Policy</h1>
+            <p class="legal__updated">Last updated: {updated}</p>
+        </header>
+
+        <div class="legal__body prose">
+            <div class="legal__intro">
+                <p>
+                    <strong>Remote Mouse Jiggler</strong> (package:
+                    <code>{SITE.packageName}</code>), developed by
+                    <strong>{SITE.developerName}</strong> ({SITE.developer}), is a
+                    local Bluetooth Human Interface Device peripheral. It acts as a
+                    mouse, a keyboard and an automated pointer jiggler.
+                </p>
+                <p>
+                    This policy describes what the application does with data. The
+                    short version is that it does not collect any.
+                </p>
+            </div>
+
+            <h2>1. Zero data collection</h2>
+            <p>
+                The application does not collect, store, share, sell or transmit
+                any personal data. There is no account system, no server
+                component, no analytics, no crash reporting, no advertising SDK and
+                no tracking identifier.
+            </p>
+            <ul>
+                <li>
+                    <strong>No keystroke logging.</strong> Text typed through the
+                    virtual keyboard is sent directly over the Bluetooth HID link to
+                    the connected receiver. It is never written to disk, logged or
+                    transmitted anywhere else.
+                </li>
+                <li>
+                    <strong>No cursor tracking.</strong> Pointer coordinates,
+                    gyroscope samples and jiggler patterns exist only in transient
+                    device memory while a session is active.
+                </li>
+                <li>
+                    <strong>No accounts.</strong> The application requires no login,
+                    no email address and no personal profile.
+                </li>
+                <li>
+                    <strong>No telemetry.</strong> There is no analytics, no
+                    behavioural profiling and no device fingerprinting.
+                </li>
+            </ul>
+
+            <h2>2. No internet access</h2>
+            <p>
+                The application does not request the Android
+                <code>INTERNET</code> permission. It is therefore technically
+                incapable of sending data to an external server or cloud service.
+                All communication is peer to peer over the local Bluetooth link
+                between your phone and the device you are controlling.
+            </p>
+            <p>
+                The website you are reading does use a normal web host, and like
+                any web server it may keep standard access logs. Those logs belong
+                to the hosting provider and are covered by their own policy. They
+                are unrelated to the application, which never contacts them.
+            </p>
+
+            <h2>3. Android permissions and their purpose</h2>
+            <p>
+                The application requests only the permissions below, and only for
+                the reasons given.
+            </p>
+
+            <div class="table-wrap">
+                <table>
+                    <caption class="visually-hidden">
+                        Android permissions requested by the app and their purpose
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Permission</th>
+                            <th scope="col">Purpose</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            permissions.map((permission) => (
+                                <tr>
+                                    <th scope="row">
+                                        <code>{permission.name}</code>
+                                    </th>
+                                    <td>{permission.purpose}</td>
+                                </tr>
+                            ))
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <h2>4. Third-party libraries</h2>
+            <p>
+                The application is built with AndroidX Jetpack, Kotlin Coroutines
+                and Koin. These are open-source libraries that operate entirely
+                offline and contain no advertising, analytics or tracking code.
+            </p>
+
+            <h2>5. Data security</h2>
+            <p>
+                Input travels directly between your phone and the target computer
+                over the Bluetooth link. Your keystrokes and pointer movements
+                never traverse the internet, a local network or any third-party
+                server, so there is no copy of them anywhere else to secure.
+            </p>
+
+            <h2>6. Children's privacy</h2>
+            <p>
+                The application does not collect any personal identifiable
+                information from anyone, including children under the age of 13.
+            </p>
+
+            <h2>7. Changes to this policy</h2>
+            <p>
+                This policy may be updated as the application changes. Any revision
+                will be published on this page with an updated date. Because the
+                app collects no data, there is no historical data set for a
+                change to affect.
+            </p>
+
+            <h2>8. Contact</h2>
+            <p>
+                Questions about this policy can be sent to
+                <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+            </p>
+        </div>
+    </div>
+</Layout>
+
+<style>
+    .legal {
+        padding-block: clamp(2rem, 1.5rem + 2vw, 3rem) clamp(3rem, 2rem + 3vw, 4rem);
+    }
+
+    .legal__crumbs {
+        display: flex;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        color: var(--ink-3);
+        margin-bottom: 1.5rem;
+    }
+
+    .legal__crumbs a {
+        color: var(--ink-2);
+        text-decoration: none;
+    }
+
+    .legal__crumbs a:hover {
+        color: var(--brand);
+    }
+
+    .legal__head {
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--line);
+        margin-bottom: 2rem;
+    }
+
+    .legal__updated {
+        margin-top: 0.5rem;
+        font-size: 0.88rem;
+        color: var(--ink-3);
+    }
+
+    .legal__intro {
+        padding: 1.25rem 1.4rem;
+        border-radius: var(--r-lg);
+        background: var(--brand-soft-2);
+        border: 1px solid var(--line);
+        margin-bottom: 2rem;
+    }
+
+    .legal__body {
+        max-width: 72ch;
+    }
+
+    .legal__body .table-wrap {
+        margin-block: 1.25rem 0.5rem;
+    }
+
+    .legal__body table {
+        min-width: 30rem;
+    }
+</style>
