@@ -57,7 +57,8 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          # Astro 7 requires Node >= 22.23.4.
+          node-version: "24"
           cache: ${{ steps.detect-package-manager.outputs.manager }}
           cache-dependency-path: ${{ env.BUILD_PATH }}/${{ steps.detect-package-manager.outputs.lockfile }}
       - name: Setup Pages
@@ -69,9 +70,22 @@ jobs:
       - name: Build with Astro
         run: |
           ${{ steps.detect-package-manager.outputs.runner }} astro build \
-            --site "${{ steps.pages.outputs.origin }}" \
             --base "${{ steps.pages.outputs.base_path }}"
         working-directory: ${{ env.BUILD_PATH }}
+        env:
+          SITE_BASE: ${{ steps.pages.outputs.base_path }}
+      - name: Generate sitemap and robots.txt
+        run: node scripts/generate-sitemap.mjs
+        working-directory: ${{ env.BUILD_PATH }}
+        env:
+          SITE_BASE: ${{ steps.pages.outputs.base_path }}
+      - name: Audit the build
+        run: |
+          node scripts/audit-build.mjs
+          node scripts/check-contrast.mjs
+        working-directory: ${{ env.BUILD_PATH }}
+        env:
+          SITE_BASE: ${{ steps.pages.outputs.base_path }}
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
