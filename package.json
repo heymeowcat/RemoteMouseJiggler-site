@@ -2,15 +2,20 @@
   "name": "remote-mouse-jiggler-site",
   "type": "module",
   "version": "1.0.0",
-  "description": "Website, showcase, privacy policy and terms for Remote Mouse Jiggler Android App",
+  "description": "Website, feature reference, press kit, privacy policy and terms for the Remote Mouse Jiggler Android app",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/generate-sitemap.mjs && node scripts/audit-build.mjs && node scripts/check-contrast.mjs",
+    "generate-sitemap": "node scripts/generate-sitemap.mjs",
+    "audit": "node scripts/audit-build.mjs",
+    "contrast": "node scripts/check-contrast.mjs",
+    "pattern-paths": "python3 scripts/generate-pattern-paths.py",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "assets": "python3 scripts/generate-assets.py",
+    "check": "astro check"
   },
   "dependencies": {
-    "@astrojs/sitemap": "^3.6.0",
-    "astro": "^5.16.5"
+    "astro": "^7.4.2"
   }
 }
