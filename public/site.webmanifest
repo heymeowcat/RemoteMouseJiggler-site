@@ -1,0 +1,29 @@
+{
+    "name": "Remote Mouse Jiggler",
+    "short_name": "Remote Mouse",
+    "description": "Turn an Android phone into a Bluetooth mouse, keyboard and automated mouse jiggler.",
+    "start_url": "/RemoteMouseJiggler-site/",
+    "scope": "/RemoteMouseJiggler-site/",
+    "display": "standalone",
+    "background_color": "#3f19bc",
+    "theme_color": "#3f19bc",
+    "icons": [
+        {
+            "src": "/RemoteMouseJiggler-site/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/RemoteMouseJiggler-site/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/RemoteMouseJiggler-site/favicon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml"
+        }
+    ]
+}

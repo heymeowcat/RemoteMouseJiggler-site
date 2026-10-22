@@ -1,0 +1,270 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageHero from "../components/PageHero.astro";
+import { SITE } from "../data/site";
+import { FAQ } from "../data/content";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const title = "FAQ";
+const description =
+    "Answers to common questions about Remote Mouse Jiggler: pairing, what the jiggler sends, privacy, hosts, and how the coding emulator works.";
+
+const groups = [
+    {
+        id: "setup",
+        label: "Setup and pairing",
+        items: [FAQ[0], FAQ[1], FAQ[10], FAQ[13]],
+    },
+    {
+        id: "jiggler",
+        label: "The mouse jiggler",
+        items: [FAQ[2], FAQ[3], FAQ[6], FAQ[11]],
+    },
+    {
+        id: "privacy",
+        label: "Privacy and security",
+        items: [FAQ[4], FAQ[5], FAQ[12]],
+    },
+    {
+        id: "using",
+        label: "Using the app",
+        items: [FAQ[7], FAQ[8], FAQ[9]],
+    },
+];
+
+const schema = [
+    {
+        "@type": "BreadcrumbList",
+        "@id": `${SITE.url}faq/#breadcrumb`,
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: SITE.url,
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "FAQ",
+                item: `${SITE.url}faq/`,
+            },
+        ],
+    },
+    {
+        "@type": "FAQPage",
+        "@id": `${SITE.url}faq/#faqpage`,
+        url: `${SITE.url}faq/`,
+        inLanguage: "en",
+        isPartOf: { "@id": `${SITE.url}#website` },
+        mainEntity: FAQ.map((item) => ({
+            "@type": "Question",
+            name: item.q,
+            acceptedAnswer: { "@type": "Answer", text: item.a },
+        })),
+    },
+];
+---
+
+<Layout title={title} description={description} titleSuffix={title} schema={schema}>
+    <PageHero
+        eyebrow="Support"
+        title="Frequently asked questions"
+        lead="Everything people ask before installing, written out in full. If something is missing, email the developer."
+    />
+
+    <div class="container page">
+        <nav class="jump" aria-label="Jump to a section">
+            <ul>
+                {
+                    groups.map((group) => (
+                        <li>
+                            <a href={`#${group.id}`}>{group.label}</a>
+                        </li>
+                    ))
+                }
+            </ul>
+        </nav>
+
+        {
+            groups.map((group) => (
+                <section class="group" id={group.id}>
+                    <h2 class="group__title">{group.label}</h2>
+
+                    <div class="qa-list">
+                        {group.items.map((item) => (
+                            <details class="qa">
+                                <summary class="qa__question">
+                                    <span>{item.q}</span>
+                                    <svg
+                                        class="qa__marker"
+                                        viewBox="0 0 24 24"
+                                        width="18"
+                                        height="18"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        aria-hidden="true"
+                                    >
+                                        <path d="M12 5v14M5 12h14" />
+                                    </svg>
+                                </summary>
+                                <div class="qa__answer">
+                                    <p>{item.a}</p>
+                                </div>
+                            </details>
+                        ))}
+                    </div>
+                </section>
+            ))
+        }
+
+        <div class="cta">
+            <div class="cta__copy">
+                <h2>Still stuck?</h2>
+                <p>
+                    Email <a href={`mailto:${SITE.email}`}>{SITE.email}</a> and it
+                    will be answered. Bug reports and feature requests are welcome
+                    in the
+                    <a href={SITE.githubUrl} target="_blank" rel="noopener noreferrer"
+                        >GitHub repository</a
+                    >.
+                </p>
+            </div>
+            <div class="btn-row cta__actions">
+                <a
+                    class="btn btn--primary"
+                    href={SITE.playUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Get it on Google Play
+                </a>
+            </div>
+        </div>
+    </div>
+</Layout>
+
+<style>
+    .page {
+        padding-block: clamp(2rem, 1.5rem + 2vw, 3.25rem);
+    }
+
+    .jump ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .jump a {
+        display: inline-block;
+        padding: 0.4rem 0.85rem;
+        border-radius: var(--r-pill);
+        border: 1px solid var(--line);
+        background: var(--surface);
+        color: var(--ink-2);
+        text-decoration: none;
+        font-size: 0.87rem;
+        font-weight: 600;
+    }
+
+    .jump a:hover {
+        border-color: var(--brand);
+        color: var(--brand);
+    }
+
+    .group {
+        margin-top: 2.75rem;
+    }
+
+    .group__title {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.6rem;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .qa-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    .qa {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--r-md);
+        overflow: hidden;
+    }
+
+    .qa[open] {
+        border-color: var(--line-strong);
+    }
+
+    .qa__question {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1rem 1.15rem;
+        cursor: pointer;
+        font-weight: 650;
+        font-size: 1rem;
+        list-style: none;
+        color: var(--ink);
+    }
+
+    .qa__question::-webkit-details-marker {
+        display: none;
+    }
+
+    .qa__question:hover {
+        color: var(--brand);
+    }
+
+    .qa__marker {
+        flex: none;
+        margin-top: 0.15rem;
+        color: var(--brand);
+        transition: transform 0.18s ease;
+    }
+
+    .qa[open] .qa__marker {
+        transform: rotate(45deg);
+    }
+
+    .qa__answer {
+        padding: 0 1.15rem 1.15rem;
+        color: var(--ink-2);
+        font-size: 0.95rem;
+        line-height: 1.65;
+    }
+
+    .cta {
+        margin-top: 3.5rem;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--r-xl);
+        padding: clamp(1.5rem, 1.25rem + 1.5vw, 2.25rem);
+        display: grid;
+        gap: 1.25rem;
+        align-items: center;
+    }
+
+    .cta__copy p {
+        margin-top: 0.5rem;
+        color: var(--ink-2);
+        max-width: 60ch;
+    }
+
+    @media (min-width: 62rem) {
+        .cta {
+            grid-template-columns: minmax(0, 1fr) auto;
+        }
+    }
+</style>

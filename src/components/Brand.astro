@@ -1,0 +1,33 @@
+---
+import { Image } from "astro:assets";
+import logo from "../assets/logo.png";
+
+interface Props {
+    size?: number;
+    class?: string;
+    alt?: string;
+    loading?: "eager" | "lazy";
+    fetchpriority?: "high" | "low" | "auto";
+}
+
+const {
+    size = 36,
+    class: className,
+    alt = "Remote Mouse Jiggler",
+    loading = "eager",
+    fetchpriority = "auto",
+} = Astro.props;
+---
+
+<Image
+    src={logo}
+    alt={alt}
+    width={size}
+    height={size}
+    class={className}
+    densities={[1, 2]}
+    format="webp"
+    loading={loading}
+    fetchpriority={fetchpriority}
+    decoding="async"
+/>

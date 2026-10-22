@@ -1,1139 +1,754 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { translations } from "../data/translations";
+import Brand from "../components/Brand.astro";
+import { SITE } from "../data/site";
+import { PATTERNS, FAQ } from "../data/content";
+
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const title = "Remote Mouse Jiggler | Bluetooth Mouse, Keyboard & Jiggler for Android";
+const description =
+    "Turn an Android phone into a Bluetooth mouse, trackpad, keyboard and automated mouse jiggler. Eight movement patterns, a coding emulator, and no software to install on your computer.";
+
+const facts = [
+    {
+        value: "0",
+        label: "Installs on your computer",
+        detail: "It is a standard Bluetooth HID device. Your operating system already knows what to do with one.",
+    },
+    {
+        value: "8",
+        label: "Jiggler movement patterns",
+        detail: "From an invisible one pixel jitter to a coding emulator that types real lines of code.",
+    },
+    {
+        value: "0",
+        label: "Internet permission requests",
+        detail: "The app cannot reach a server, so there is nothing to collect, log or sell.",
+    },
+];
+
+const features = [
+    {
+        icon: "mouse",
+        title: "Trackpad and air mouse",
+        body: "Drag to move, tap once to left click, twice for right, three times for middle, and scroll with two fingers. Switch on the gyroscope and the phone becomes a pointer you move through the air.",
+        points: ["One to three finger taps", "Two finger scrolling", "Gyroscope pointer"],
+        linkText: "Explore the trackpad and air mouse",
+        href: `${base}/features/#mouse`,
+    },
+    {
+        icon: "keyboard",
+        title: "Virtual keyboard",
+        body: "Type a message and send it to your computer in one go, with or without a trailing Enter. Set the speed from 1 to 60 milliseconds per key and keep your copied indentation intact.",
+        points: ["Send text or text and Enter", "1 to 60 ms per key", "Auto-indent compensation"],
+        linkText: "Explore the virtual keyboard",
+        href: `${base}/features/#keyboard`,
+    },
+    {
+        icon: "jiggle",
+        title: "Mouse jiggler",
+        body: "Keep your session alive with eight movement patterns, adjustable interval and distance, and a timer that stops the run on its own. Start it from the app, a Quick Settings tile or a home screen widget.",
+        points: ["Infinite or timed runs", "0.2 to 5 second interval", "Widget and tile control"],
+        linkText: "Compare all eight jiggler patterns",
+        href: `${base}/jiggler-patterns/`,
+    },
+    {
+        icon: "shield",
+        title: "Private by construction",
+        body: "No account, no analytics, no advertising SDK, and no Android internet permission. Keystrokes and pointer positions live in memory for the length of a session and nowhere else.",
+        points: ["No account required", "No telemetry", "Local only"],
+        linkText: "Read how the privacy model works",
+        href: `${base}/features/#privacy`,
+    },
+];
+
+const steps = [
+    {
+        title: "Turn on Bluetooth",
+        body: "Enable Bluetooth on your phone and on the machine you want to control: a Windows, macOS or Linux computer, an Android phone, an Android TV, or any other Bluetooth host.",
+    },
+    {
+        title: "Find your device",
+        body: "The app scans for classic Bluetooth and BLE devices together and shows real names, labelling computers, phones, TVs and audio hardware by their Bluetooth class.",
+    },
+    {
+        title: "Pair from the remote side",
+        body: "A normal Android pairing does not bind the HID profile, so the app guides you through pairing from the device you are controlling, then finishes the connection itself.",
+    },
+    {
+        title: "Name it and go",
+        body: "Rename the device so it shows up in your host's Bluetooth list under something recognisable. The new name applies immediately, with no restart.",
+    },
+];
+
+const previewFaq = FAQ.slice(0, 4);
+
+/* ------------------------------------------------------- structured data -- */
+
+const graph = [
+    {
+        "@type": "WebSite",
+        "@id": `${SITE.url}#website`,
+        url: SITE.url,
+        name: SITE.name,
+        description,
+        inLanguage: "en",
+        publisher: { "@id": `${SITE.url}#publisher` },
+    },
+    {
+        "@type": "Organization",
+        "@id": `${SITE.url}#publisher`,
+        name: SITE.developer,
+        url: SITE.developerUrl,
+        sameAs: [SITE.githubUrl, SITE.linkedinUrl],
+    },
+    {
+        "@type": "SoftwareApplication",
+        "@id": `${SITE.url}#app`,
+        name: SITE.name,
+        alternateName: "Remote Mouse Jiggler for Android",
+        description,
+        url: SITE.url,
+        downloadUrl: SITE.playUrl,
+        softwareVersion: SITE.version,
+        applicationCategory: "UtilitiesApplication",
+        operatingSystem: "Android 9.0 (API 28) and later",
+        installUrl: SITE.playUrl,
+        author: {
+            "@type": "Person",
+            name: SITE.developerName,
+            url: SITE.developerUrl,
+        },
+        publisher: { "@id": `${SITE.url}#publisher` },
+        offers: {
+            "@type": "Offer",
+            price: SITE.priceValue,
+            priceCurrency: SITE.currency,
+            availability: "https://schema.org/InStock",
+        },
+        featureList: [
+            "Bluetooth HID mouse and trackpad",
+            "Gyroscope air mouse",
+            "Virtual keyboard with adjustable typing speed",
+            "Eight mouse jiggler movement patterns",
+            "Coding emulator jiggler pattern",
+            "Quick Settings tile and home screen widget",
+            "No internet permission",
+        ],
+    },
+    {
+        "@type": "FAQPage",
+        "@id": `${SITE.url}#faq`,
+        mainEntity: previewFaq.map((item) => ({
+            "@type": "Question",
+            name: item.q,
+            acceptedAnswer: { "@type": "Answer", text: item.a },
+        })),
+    },
+];
 ---
 
-<Layout
-    title="Remote Mouse Jiggler | Bluetooth HID Mouse, Keyboard & Jiggler for Android"
-    description="Transform your phone into a Bluetooth wireless trackpad, air mouse, presentation controller, TV remote, and automated mouse jiggler. Zero desktop software required."
->
-    <!-- HERO SECTION -->
-    <section class="hero-section">
-        <div class="container hero-container">
-            <div class="hero-icon-wrapper">
-                <div class="glow-ring"></div>
-                <img
-                    src={`${base}/remote-mouse-jiggler-logo.png`}
-                    alt="Remote Mouse Jiggler Logo"
-                    class="hero-app-icon"
-                    width="128"
-                    height="128"
-                />
+<Layout title={title} description={description} schema={graph}>
+    <!-- ------------------------------------------------------------ hero -- -->
+    <section class="hero">
+        <div class="container hero__inner">
+            <div class="hero__copy">
+                <p class="eyebrow">Remote Mouse Jiggler for Android</p>
+                <h1>
+                    Your phone becomes a Bluetooth mouse, keyboard and mouse jiggler
+                </h1>
+                <p class="hero__lead">
+                    Remote Mouse Jiggler turns your Android phone into a wireless
+                    trackpad, an air mouse and a full keyboard for any computer or TV
+                    that speaks Bluetooth HID — plus an automated mouse jiggler that
+                    keeps your session alive. Nothing to install on the other machine,
+                    and nothing leaves your phone.
+                </p>
+
+                <div class="btn-row hero__actions">
+                    <a
+                        class="btn btn--primary btn--lg"
+                        href={SITE.playUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <svg
+                            viewBox="0 0 24 24"
+                            width="18"
+                            height="18"
+                            fill="currentColor"
+                            aria-hidden="true"
+                        >
+                            <path
+                                d="M3.6 1.8c-.3.3-.5.8-.5 1.4v17.6c0 .6.2 1.1.5 1.4l.1.1 9.9-9.9v-.2L3.7 1.7l-.1.1zm13.8 11.3-3.3-3.3v-.2l3.3-3.3.1.1 3.9 2.2c1.1.6 1.1 1.7 0 2.4l-3.9 2.2-.1-.1zm-.5.4-3.4-3.4-7 7c.4.4 1 .4 1.8 0l8.6-4.6zM4.1 21.9c-.5-.6-.8-1.5-.8-2.6v-14c0-1 .3-1.8.8-2.4l.1-.1 7 7-7.1 7.1z"
+                            ></path>
+                        </svg>
+                        Get it on Google Play
+                    </a>
+                    <a
+                        class="btn btn--ghost btn--lg"
+                        href={SITE.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <svg
+                            viewBox="0 0 24 24"
+                            width="18"
+                            height="18"
+                            fill="currentColor"
+                            aria-hidden="true"
+                        >
+                            <path
+                                d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.12 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.67.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"
+                            ></path>
+                        </svg>
+                        View the source
+                    </a>
+                </div>
+
+                <p class="hero__meta">
+                    Free · Android 9.0 and newer · No ads, no accounts, no tracking
+                </p>
             </div>
 
-            <h1 class="hero-title" id="hero-title">
-                Remote <span class="gradient-text">Mouse Jiggler</span>
-            </h1>
-            <p class="hero-tagline">{translations.tagline}</p>
-            <p class="hero-description">{translations.description}</p>
-
-            <div class="hero-actions">
-                <a
-                    href="https://play.google.com/store/apps/details?id=com.heymeowcat.remotemousejiggler"
-                    class="play-badge-link"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    id="btn-play-store"
-                >
-                    <img
-                        src={`${base}/google-play-badge.svg`}
-                        alt="Get it on Google Play"
-                        class="play-badge-img"
-                        height="64"
+            <div class="hero__art">
+                <div class="hero__art-panel">
+                    <Brand
+                        size={128}
+                        class="hero__icon"
+                        alt="Remote Mouse Jiggler app icon: a yellow duck on a blue background"
+                        loading="eager"
+                        fetchpriority="high"
                     />
-                </a>
-
-                <a
-                    href="https://github.com/heymeowcat/RemoteMouseJiggler"
-                    class="btn-secondary-action"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    id="btn-github"
-                >
-                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-                    </svg>
-                    <span>{translations.viewOnGithub}</span>
-                </a>
-            </div>
-
-            <!-- Stats Highlights (3 items) -->
-            <div class="highlights-grid">
-                <div class="highlight-item">
-                    <div class="highlight-num">0</div>
-                    <div class="highlight-title">{translations.highlights.zeroSoftware}</div>
-                    <div class="highlight-desc">{translations.highlights.zeroSoftwareDesc}</div>
-                </div>
-                <div class="highlight-item">
-                    <div class="highlight-num">7</div>
-                    <div class="highlight-title">{translations.highlights.patterns}</div>
-                    <div class="highlight-desc">{translations.highlights.patternsDesc}</div>
-                </div>
-                <div class="highlight-item">
-                    <div class="highlight-num">100%</div>
-                    <div class="highlight-title">{translations.highlights.offline}</div>
-                    <div class="highlight-desc">{translations.highlights.offlineDesc}</div>
+                    <ul class="hero__art-list">
+                        <li>
+                            <span class="chip chip--ok"><span class="chip__dot"></span>
+                                Bluetooth HID</span
+                            >
+                        </li>
+                        <li>
+                            <span class="chip chip--brand"><span class="chip__dot"></span>
+                                8 jiggler patterns</span
+                            >
+                        </li>
+                        <li>
+                            <span class="chip chip--accent"><span class="chip__dot"></span>
+                                Works offline</span
+                            >
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- INTERACTIVE JIGGLER SIMULATOR -->
-    <section id="interactive-demo" class="demo-section">
+        <!-- facts -->
         <div class="container">
-            <div class="section-header">
-                <span class="section-pill">{translations.jigglerDemo.badge}</span>
-                <h2 class="section-title">{translations.jigglerDemo.title}</h2>
-                <p class="section-subtitle">{translations.jigglerDemo.subtitle}</p>
-            </div>
-
-            <div class="simulator-card">
-                <div class="simulator-visualizer">
-                    <canvas id="jigglerCanvas" width="460" height="340"></canvas>
-                    <div class="simulator-hud">
-                        <div class="hud-status" id="hudStatus">
-                            <span class="hud-dot pulsing"></span>
-                            <span id="hudStateText">JIGGLER ACTIVE</span>
+            <dl class="facts">
+                {
+                    facts.map((fact) => (
+                        <div class="facts__item">
+                            <dt class="facts__value">{fact.value}</dt>
+                            <dd>
+                                <span class="facts__label">{fact.label}</span>
+                                <span class="facts__detail">{fact.detail}</span>
+                            </dd>
                         </div>
-                        <div class="hud-metrics">
-                            <span id="hudPatternName">Micro Jitter</span>
-                            <span class="hud-separator">•</span>
-                            <span id="hudStatsText">Moves: 0 | Time: 00:00:00</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="simulator-controls">
-                    <div class="control-group">
-                        <label class="control-label">Select Movement Algorithm</label>
-                        <div class="pattern-selector" id="patternButtons">
-                            <button class="pattern-btn active" data-pattern="jitter">
-                                <strong>Micro Jitter</strong>
-                                <span>Subtle 1px micro-vibrations</span>
-                            </button>
-                            <button class="pattern-btn" data-pattern="circle">
-                                <strong>Smooth Circle</strong>
-                                <span>Circular rotation loop</span>
-                            </button>
-                            <button class="pattern-btn" data-pattern="figureEight">
-                                <strong>Figure Eight</strong>
-                                <span>Fluid infinity pattern</span>
-                            </button>
-                            <button class="pattern-btn" data-pattern="random">
-                                <strong>Random Wander</strong>
-                                <span>Organic unpredictable roaming</span>
-                            </button>
-                            <button class="pattern-btn" data-pattern="wave">
-                                <strong>Sine Wave</strong>
-                                <span>Sinusoidal wave oscillation</span>
-                            </button>
-                            <button class="pattern-btn" data-pattern="spiral">
-                                <strong>Expanding Spiral</strong>
-                                <span>Concentric expanding spiral</span>
-                            </button>
-                            <button class="pattern-btn" data-pattern="diagonal">
-                                <strong>Diagonal Bounce</strong>
-                                <span>Corner-to-corner trajectory</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="pattern-info-box" id="patternDescription">
-                        {translations.patterns.jitter.desc}
-                    </div>
-
-                    <div class="simulator-actions">
-                        <button id="btnToggleJiggle" class="btn-toggle-jiggle">
-                            <svg id="iconPlayPause" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-                                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-                            </svg>
-                            <span id="btnToggleText">Pause Jiggler</span>
-                        </button>
-                        <button id="btnResetJiggle" class="btn-reset-jiggle">Reset Counter</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CORE FEATURES SECTION -->
-    <section id="features" class="features-section">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-pill">Capabilities</span>
-                <h2 class="section-title">{translations.features.sectionTitle}</h2>
-                <p class="section-subtitle">{translations.features.sectionSubtitle}</p>
-            </div>
-
-            <div class="features-grid">
-                <!-- Feature 1: Jiggler -->
-                <div class="feature-card highlighted-card">
-                    <div class="feature-icon-box">
-                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/>
-                            <circle cx="12" cy="12" r="4"/>
-                        </svg>
-                    </div>
-                    <h3>{translations.features.jiggler.title}</h3>
-                    <p>{translations.features.jiggler.desc}</p>
-                    <div class="feature-tags">
-                        <span>7 Patterns</span>
-                        <span>Auto-Timer</span>
-                        <span>Background Service</span>
-                    </div>
-                </div>
-
-                <!-- Feature 2: Mouse & Touchpad -->
-                <div class="feature-card">
-                    <div class="feature-icon-box">
-                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="5" y="2" width="14" height="20" rx="7"/>
-                            <path d="M12 6v4"/>
-                        </svg>
-                    </div>
-                    <h3>{translations.features.mouse.title}</h3>
-                    <p>{translations.features.mouse.desc}</p>
-                    <div class="feature-tags">
-                        <span>Air Mouse Gyro</span>
-                        <span>Two-Finger Scroll</span>
-                        <span>Click Haptics</span>
-                    </div>
-                </div>
-
-
-
-                <!-- Feature 5: Keyboard -->
-                <div class="feature-card">
-                    <div class="feature-icon-box">
-                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="2" y="4" width="20" height="16" rx="2"/>
-                            <line x1="6" y1="8" x2="6" y2="8"/>
-                            <line x1="10" y1="8" x2="10" y2="8"/>
-                            <line x1="14" y1="8" x2="14" y2="8"/>
-                            <line x1="18" y1="8" x2="18" y2="8"/>
-                            <line x1="6" y1="12" x2="6" y2="12"/>
-                            <line x1="10" y1="12" x2="10" y2="12"/>
-                            <line x1="14" y1="12" x2="14" y2="12"/>
-                            <line x1="18" y1="12" x2="18" y2="12"/>
-                            <line x1="7" y1="16" x2="17" y2="16"/>
-                        </svg>
-                    </div>
-                    <h3>{translations.features.keyboard.title}</h3>
-                    <p>{translations.features.keyboard.desc}</p>
-                    <div class="feature-tags">
-                        <span>International Layouts</span>
-                        <span>Modifier Keys</span>
-                        <span>Text Dispatch</span>
-                    </div>
-                </div>
-
-                <!-- Feature 6: Privacy & Offline -->
-                <div class="feature-card">
-                    <div class="feature-icon-box">
-                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                        </svg>
-                    </div>
-                    <h3>{translations.features.privacy.title}</h3>
-                    <p>{translations.features.privacy.desc}</p>
-                    <div class="feature-tags">
-                        <span>No Internet Needed</span>
-                        <span>Zero Data Collection</span>
-                        <span>Pure Bluetooth HID</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- HOW IT WORKS SECTION -->
-    <section id="how-it-works" class="how-section">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-pill">Setup</span>
-                <h2 class="section-title">{translations.howItWorks.title}</h2>
-                <p class="section-subtitle">{translations.howItWorks.subtitle}</p>
-            </div>
-
-            <div class="steps-grid">
-                <div class="step-card">
-                    <div class="step-number">1</div>
-                    <h3>{translations.howItWorks.step1Title}</h3>
-                    <p>{translations.howItWorks.step1Desc}</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">2</div>
-                    <h3>{translations.howItWorks.step2Title}</h3>
-                    <p>{translations.howItWorks.step2Desc}</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">3</div>
-                    <h3>{translations.howItWorks.step3Title}</h3>
-                    <p>{translations.howItWorks.step3Desc}</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ SECTION -->
-    <section id="faq" class="faq-section">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-pill">Questions</span>
-                <h2 class="section-title">{translations.faq.title}</h2>
-            </div>
-
-            <div class="faq-grid">
-                <div class="faq-item">
-                    <h4>{translations.faq.q1}</h4>
-                    <p>{translations.faq.a1}</p>
-                </div>
-                <div class="faq-item">
-                    <h4>{translations.faq.q2}</h4>
-                    <p>{translations.faq.a2}</p>
-                </div>
-                <div class="faq-item">
-                    <h4>{translations.faq.q3}</h4>
-                    <p>{translations.faq.a3}</p>
-                </div>
-                <div class="faq-item">
-                    <h4>{translations.faq.q4}</h4>
-                    <p>{translations.faq.a4}</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CLIENT SCRIPT FOR INTERACTIVE JIGGLER SIMULATION -->
-    <script define:vars={{ patterns: translations.patterns }}>
-        const canvas = document.getElementById("jigglerCanvas");
-        const ctx = canvas.getContext("2d");
-        const hudPatternName = document.getElementById("hudPatternName");
-        const hudStatsText = document.getElementById("hudStatsText");
-        const hudStateText = document.getElementById("hudStateText");
-        const hudDot = document.querySelector(".hud-dot");
-        const btnToggleJiggle = document.getElementById("btnToggleJiggle");
-        const btnToggleText = document.getElementById("btnToggleText");
-        const btnResetJiggle = document.getElementById("btnResetJiggle");
-        const patternButtons = document.querySelectorAll(".pattern-btn");
-        const patternDescription = document.getElementById("patternDescription");
-
-        let activePattern = "jitter";
-        let isRunning = true;
-        let totalMoves = 0;
-        let startTime = Date.now();
-        let elapsedSeconds = 0;
-
-        let curX = canvas.width / 2;
-        let curY = canvas.height / 2;
-        let originX = canvas.width / 2;
-        let originY = canvas.height / 2;
-
-        let stepAngle = 0.0;
-        let moveDirection = 1;
-        let spiralRadius = 1.0;
-        let trail = [];
-        const maxTrail = 80;
-
-        function updatePatternDescription() {
-            if (patterns && patterns[activePattern]) {
-                patternDescription.innerText = patterns[activePattern].desc;
-                hudPatternName.innerText = patterns[activePattern].name;
-            }
-        }
-
-        patternButtons.forEach((btn) => {
-            btn.addEventListener("click", () => {
-                patternButtons.forEach((b) => b.classList.remove("active"));
-                btn.classList.add("active");
-                activePattern = btn.getAttribute("data-pattern");
-                stepAngle = 0.0;
-                moveDirection = 1;
-                spiralRadius = 1.0;
-                trail = [];
-                curX = originX;
-                curY = originY;
-                updatePatternDescription();
-            });
-        });
-
-        btnToggleJiggle.addEventListener("click", () => {
-            isRunning = !isRunning;
-            if (isRunning) {
-                hudStateText.innerText = "JIGGLER ACTIVE";
-                btnToggleText.innerText = "Pause Jiggler";
-                hudDot.classList.add("pulsing");
-            } else {
-                hudStateText.innerText = "JIGGLER PAUSED";
-                btnToggleText.innerText = "Resume Jiggler";
-                hudDot.classList.remove("pulsing");
-            }
-        });
-
-        btnResetJiggle.addEventListener("click", () => {
-            totalMoves = 0;
-            startTime = Date.now();
-            elapsedSeconds = 0;
-            trail = [];
-            curX = originX;
-            curY = originY;
-        });
-
-        function calculateNextPosition() {
-            const r = 50; // visual radius scale
-            let dx = 0;
-            let dy = 0;
-
-            switch (activePattern) {
-                case "jitter":
-                    moveDirection = -moveDirection;
-                    dx = 12 * moveDirection;
-                    dy = (Math.random() - 0.5) * 4;
-                    curX = originX + dx;
-                    curY = originY + dy;
-                    break;
-                case "circle":
-                    stepAngle += 0.08;
-                    if (stepAngle > 2 * Math.PI) stepAngle -= 2 * Math.PI;
-                    curX = originX + r * Math.cos(stepAngle);
-                    curY = originY + r * Math.sin(stepAngle);
-                    break;
-                case "figureEight":
-                    stepAngle += 0.06;
-                    if (stepAngle > 2 * Math.PI) stepAngle -= 2 * Math.PI;
-                    curX = originX + r * 1.2 * Math.sin(stepAngle);
-                    curY = originY + r * 0.7 * Math.sin(2 * stepAngle);
-                    break;
-                case "random":
-                    curX += (Math.random() - 0.5) * 20;
-                    curY += (Math.random() - 0.5) * 20;
-                    if (Math.abs(curX - originX) > r * 1.3) curX = originX;
-                    if (Math.abs(curY - originY) > r * 1.3) curY = originY;
-                    break;
-                case "wave":
-                    stepAngle += 0.07;
-                    if (stepAngle > 2 * Math.PI) stepAngle -= 2 * Math.PI;
-                    curX = originX + (stepAngle / (2 * Math.PI) - 0.5) * r * 2.5;
-                    curY = originY + Math.sin(stepAngle * 2) * (r * 0.6);
-                    break;
-                case "spiral":
-                    stepAngle += 0.1;
-                    if (stepAngle > 2 * Math.PI) stepAngle -= 2 * Math.PI;
-                    spiralRadius += 0.4;
-                    if (spiralRadius > r) spiralRadius = 2.0;
-                    curX = originX + spiralRadius * Math.cos(stepAngle);
-                    curY = originY + spiralRadius * Math.sin(stepAngle);
-                    break;
-                case "diagonal":
-                    stepAngle += 0.05;
-                    if (stepAngle > 2 * Math.PI) stepAngle -= 2 * Math.PI;
-                    const dOffset = Math.sin(stepAngle) * r;
-                    curX = originX + dOffset;
-                    curY = originY + dOffset;
-                    break;
-            }
-
-            trail.push({ x: curX, y: curY });
-            if (trail.length > maxTrail) {
-                trail.shift();
-            }
-            totalMoves++;
-        }
-
-        let lastMoveTick = 0;
-        function renderLoop(time) {
-            if (isRunning && time - lastMoveTick > 40) {
-                calculateNextPosition();
-                lastMoveTick = time;
-                elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
-            }
-
-            const hrs = String(Math.floor(elapsedSeconds / 3600)).padStart(2, "0");
-            const mins = String(Math.floor((elapsedSeconds % 3600) / 60)).padStart(2, "0");
-            const secs = String(elapsedSeconds % 60).padStart(2, "0");
-            hudStatsText.innerText = `Moves: ${totalMoves} | Time: ${hrs}:${mins}:${secs}`;
-
-            // Draw Background Grid
-            ctx.fillStyle = "#0e101a";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Subtle Grid Lines
-            ctx.strokeStyle = "rgba(255, 255, 255, 0.04)";
-            ctx.lineWidth = 1;
-            const gridSize = 24;
-            for (let x = 0; x < canvas.width; x += gridSize) {
-                ctx.beginPath();
-                ctx.moveTo(x, 0);
-                ctx.lineTo(x, canvas.height);
-                ctx.stroke();
-            }
-            for (let y = 0; y < canvas.height; y += gridSize) {
-                ctx.beginPath();
-                ctx.moveTo(0, y);
-                ctx.lineTo(canvas.width, y);
-                ctx.stroke();
-            }
-
-            // Draw Center Crosshair
-            ctx.strokeStyle = "rgba(255, 168, 1, 0.25)";
-            ctx.lineWidth = 1;
-            ctx.setLineDash([4, 4]);
-            ctx.beginPath();
-            ctx.moveTo(originX - 60, originY);
-            ctx.lineTo(originX + 60, originY);
-            ctx.moveTo(originX, originY - 60);
-            ctx.lineTo(originX, originY + 60);
-            ctx.stroke();
-            ctx.setLineDash([]);
-
-            // Draw Trail
-            if (trail.length > 1) {
-                for (let i = 1; i < trail.length; i++) {
-                    const alpha = (i / trail.length) * 0.7;
-                    ctx.strokeStyle = `rgba(255, 168, 1, ${alpha})`;
-                    ctx.lineWidth = 2.5 * (i / trail.length);
-                    ctx.beginPath();
-                    ctx.moveTo(trail[i - 1].x, trail[i - 1].y);
-                    ctx.lineTo(trail[i].x, trail[i].y);
-                    ctx.stroke();
+                    ))
                 }
-            }
+            </dl>
+        </div>
+    </section>
 
-            // Draw Pointer Cursor
-            ctx.save();
-            ctx.translate(curX, curY);
-            
-            // Cursor Glow
-            ctx.fillStyle = "rgba(255, 168, 1, 0.25)";
-            ctx.beginPath();
-            ctx.arc(0, 0, 16, 0, Math.PI * 2);
-            ctx.fill();
+    <!-- -------------------------------------------------------- features -- -->
+    <section class="section" id="features">
+        <div class="container">
+            <div class="section__head">
+                <p class="eyebrow">What it does</p>
+                <h2>One app, three ways to control your computer</h2>
+                <p>
+                    Every mode talks the same standard Bluetooth HID protocol, so your
+                    computer sees one wireless keyboard and mouse no matter which mode
+                    you are using.
+                </p>
+            </div>
 
-            // Arrow shape
-            ctx.fillStyle = "#ffa801";
-            ctx.strokeStyle = "#ffffff";
-            ctx.lineWidth = 1.5;
-            ctx.beginPath();
-            ctx.moveTo(0, 0);
-            ctx.lineTo(16, 12);
-            ctx.lineTo(9, 13);
-            ctx.lineTo(14, 23);
-            ctx.lineTo(10, 25);
-            ctx.lineTo(5, 15);
-            ctx.lineTo(0, 19);
-            ctx.closePath();
-            ctx.fill();
-            ctx.stroke();
-            ctx.restore();
+            <div class="grid grid--2 feature-grid">
+                {
+                    features.map((feature) => (
+                        <article class="card card--pad feature">
+                            <span class="feature__icon" aria-hidden="true">
+                                {feature.icon === "mouse" && (
+                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="6" y="2.5" width="12" height="19" rx="6" />
+                                        <path d="M12 6.5v3.5" />
+                                    </svg>
+                                )}
+                                {feature.icon === "keyboard" && (
+                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="2.5" y="5.5" width="19" height="13" rx="2.5" />
+                                        <path d="M6 9.5h.01M9.5 9.5h.01M13 9.5h.01M16.5 9.5h.01M6 12.5h.01M9.5 12.5h.01M13 12.5h.01M16.5 12.5h.01M8 15.5h8" />
+                                    </svg>
+                                )}
+                                {feature.icon === "jiggle" && (
+                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 2.5v3M12 18.5v3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M2.5 12h3M18.5 12h3M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1" />
+                                        <circle cx="12" cy="12" r="3.4" />
+                                    </svg>
+                                )}
+                                {feature.icon === "shield" && (
+                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 2.5 4.5 5.6v6c0 4.4 3.1 8.4 7.5 9.9 4.4-1.5 7.5-5.5 7.5-9.9v-6z" />
+                                        <path d="m9 11.8 2.2 2.2 4-4.2" />
+                                    </svg>
+                                )}
+                            </span>
+                            <h3 class="feature__title">{feature.title}</h3>
+                            <p class="feature__body">{feature.body}</p>
+                            <ul class="feature__points">
+                                {feature.points.map((point) => (
+                                    <li>{point}</li>
+                                ))}
+                            </ul>
+                            <a class="feature__link" href={feature.href}>
+                                {feature.linkText}
+                                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M5 12h13M13 6l6 6-6 6" />
+                                </svg>
+                            </a>
+                        </article>
+                    ))
+                }
+            </div>
+        </div>
+    </section>
 
-            requestAnimationFrame(renderLoop);
-        }
+    <!-- -------------------------------------------------------- patterns -- -->
+    <section class="section section--tint" id="patterns">
+        <div class="container">
+            <div class="section__head">
+                <p class="eyebrow">The jiggler</p>
+                <h2>Eight ways to keep a session alive</h2>
+                <p>
+                    Each pattern is a different movement profile, all generated on
+                    device and all sent as genuine relative mouse input. Set the
+                    interval from 0.2 to 5 seconds and the distance from 2 to 50
+                    pixels.
+                </p>
+            </div>
 
-        requestAnimationFrame(renderLoop);
-    </script>
+            <ul class="pattern-grid">
+                {
+                    PATTERNS.map((pattern) => (
+                        <li class="pattern">
+                            <div class="pattern__head">
+                                <h3 class="pattern__name">{pattern.name}</h3>
+                                <span
+                                    class:list={[
+                                        "chip",
+                                        pattern.tag === "Signature"
+                                            ? "chip--accent"
+                                            : pattern.tag === "Screen saver"
+                                              ? "chip--ok"
+                                              : "chip--brand",
+                                    ]}
+                                >
+                                    {pattern.tag}
+                                </span>
+                            </div>
+                            <p class="pattern__short">{pattern.short}</p>
+                        </li>
+                    ))
+                }
+            </ul>
+
+            <div class="section__cta">
+                <a class="btn btn--primary" href={`${base}/jiggler-patterns/`}>
+                    Compare all eight patterns
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ----------------------------------------------------------- setup -- -->
+    <section class="section" id="how-it-works">
+        <div class="container">
+            <div class="section__head">
+                <p class="eyebrow">Getting started</p>
+                <h2>Pair it in a couple of minutes</h2>
+                <p>
+                    The whole setup happens over the Bluetooth link between your
+                    phone and the machine in front of you.
+                </p>
+            </div>
+
+            <ol class="steps">
+                {
+                    steps.map((step, index) => (
+                        <li class="step">
+                            <span class="step__number" aria-hidden="true">
+                                {index + 1}
+                            </span>
+                            <h3 class="step__title">{step.title}</h3>
+                            <p class="step__body">{step.body}</p>
+                        </li>
+                    ))
+                }
+            </ol>
+        </div>
+    </section>
+
+    <!-- --------------------------------------------------------- faq ---- -->
+    <section class="section section--tint" id="faq">
+        <div class="container">
+            <div class="section__head">
+                <p class="eyebrow">Questions</p>
+                <h2>Straight answers</h2>
+                <p>
+                    The full list lives on the
+                    <a href={`${base}/faq/`}>FAQ page</a>.
+                </p>
+            </div>
+
+            <div class="grid grid--2">
+                {
+                    previewFaq.map((item) => (
+                        <article class="card">
+                            <h3 class="card__title">{item.q}</h3>
+                            <p class="card__body">{item.a}</p>
+                        </article>
+                    ))
+                }
+            </div>
+
+            <div class="section__cta">
+                <a class="btn btn--ghost" href={`${base}/faq/`}>See every question</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ----------------------------------------------------------- cta -- -->
+    <section class="section">
+        <div class="container">
+            <div class="cta">
+                <div class="cta__copy">
+                    <h2>Put your phone to work as a mouse</h2>
+                    <p>
+                        Free, open source, and no account. Download it, pair it once,
+                        and never be locked out of a session again.
+                    </p>
+                </div>
+                <div class="btn-row cta__actions">
+                    <a
+                        class="btn btn--accent btn--lg"
+                        href={SITE.playUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Get it on Google Play
+                    </a>
+                    <a class="btn btn--ghost btn--lg" href={`${base}/download/`}>
+                        Download details
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
 </Layout>
 
 <style>
-    /* HERO SECTION */
-    .hero-section {
-        padding: 5.5rem 0 3.5rem;
-        position: relative;
-        overflow: hidden;
+    /* ------------------------------------------------------------- hero -- */
+    .hero {
+        padding-block: clamp(2.5rem, 1.5rem + 5vw, 5rem) clamp(2rem, 1rem + 3vw, 3rem);
+        background:
+            radial-gradient(
+                60rem 30rem at 15% -10%,
+                color-mix(in srgb, var(--brand) 12%, transparent),
+                transparent 70%
+            ),
+            radial-gradient(
+                40rem 24rem at 95% 0%,
+                color-mix(in srgb, var(--accent) 10%, transparent),
+                transparent 65%
+            );
     }
 
-    .hero-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-
-    .hero-icon-wrapper {
-        position: relative;
-        margin-bottom: 2rem;
-    }
-
-    .glow-ring {
-        position: absolute;
-        inset: -12px;
-        border-radius: 36px;
-        background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
-        animation: pulseGlow 3s ease-in-out infinite alternate;
-        z-index: 0;
-    }
-
-    @keyframes pulseGlow {
-        from {
-            transform: scale(0.95);
-            opacity: 0.5;
-        }
-        to {
-            transform: scale(1.08);
-            opacity: 0.9;
-        }
-    }
-
-    .hero-app-icon {
-        position: relative;
-        z-index: 1;
-        border-radius: 28px;
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 20px var(--primary-glow);
-        background: var(--bg-surface);
-    }
-
-    .hero-title {
-        font-size: 3.5rem;
-        font-weight: 800;
-        line-height: 1.1;
-        letter-spacing: -0.03em;
-        margin-bottom: 1rem;
-        max-width: 850px;
-    }
-
-    .gradient-text {
-        background: linear-gradient(135deg, #ffa801 0%, #ffd32a 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-
-    .hero-tagline {
-        font-size: 1.35rem;
-        font-weight: 600;
-        color: var(--text-main);
-        margin-bottom: 1rem;
-        max-width: 720px;
-    }
-
-    .hero-description {
-        font-size: 1.05rem;
-        color: var(--text-muted);
-        max-width: 680px;
-        line-height: 1.7;
-        margin-bottom: 2.5rem;
-    }
-
-    .hero-actions {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 1.25rem;
-        flex-wrap: wrap;
-        margin-bottom: 3.5rem;
-    }
-
-    .play-badge-link {
-        display: inline-block;
-        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), filter 0.25s ease;
-        filter: drop-shadow(0 6px 18px var(--primary-glow));
-        line-height: 0;
-    }
-
-    .play-badge-link:hover {
-        transform: translateY(-3px) scale(1.03);
-        filter: drop-shadow(0 10px 24px rgba(255, 168, 1, 0.4));
-    }
-
-    .play-badge-img {
-        height: 64px;
-        width: auto;
-        display: block;
-    }
-
-    .btn-secondary-action {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.65rem;
-        background: var(--bg-surface);
-        color: var(--text-main);
-        padding: 0.95rem 1.6rem;
-        border-radius: var(--radius-md);
-        border: 1px solid var(--border-subtle);
-        font-weight: 600;
-        font-size: 0.95rem;
-        text-decoration: none;
-        transition: all 0.2s;
-    }
-
-    .btn-secondary-action:hover {
-        border-color: var(--border-highlight);
-        background: var(--bg-surface-elevated);
-        transform: translateY(-2px);
-    }
-
-    /* Highlights Grid (3 items) */
-    .highlights-grid {
+    .hero__inner {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.5rem;
-        width: 100%;
-        max-width: 860px;
-    }
-
-    .highlight-item {
-        background: var(--bg-surface);
-        border: 1px solid var(--border-subtle);
-        padding: 1.5rem 1.25rem;
-        border-radius: var(--radius-lg);
-        text-align: center;
-        transition: border-color 0.2s;
-    }
-
-    .highlight-item:hover {
-        border-color: var(--border-highlight);
-    }
-
-    .highlight-num {
-        font-size: 2rem;
-        font-weight: 800;
-        color: var(--primary);
-        line-height: 1;
-        margin-bottom: 0.4rem;
-    }
-
-    .highlight-title {
-        font-weight: 700;
-        font-size: 0.95rem;
-        color: var(--text-main);
-        margin-bottom: 0.25rem;
-    }
-
-    .highlight-desc {
-        font-size: 0.8rem;
-        color: var(--text-muted);
-    }
-
-    /* SECTION HEADERS */
-    .section-header {
-        text-align: center;
-        margin-bottom: 3.5rem;
-    }
-
-    .section-pill {
-        display: inline-block;
-        font-size: 0.75rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        color: var(--primary);
-        background: rgba(255, 168, 1, 0.1);
-        padding: 0.35rem 0.85rem;
-        border-radius: var(--radius-pill);
-        margin-bottom: 0.75rem;
-    }
-
-    .section-title {
-        font-size: 2.4rem;
-        font-weight: 800;
-        color: var(--text-main);
-        letter-spacing: -0.02em;
-        margin-bottom: 0.75rem;
-    }
-
-    .section-subtitle {
-        font-size: 1.05rem;
-        color: var(--text-muted);
-        max-width: 620px;
-        margin: 0 auto;
-    }
-
-    /* SIMULATOR SECTION */
-    .demo-section {
-        padding: 4rem 0 5rem;
-    }
-
-    .simulator-card {
-        background: var(--bg-surface);
-        border: 1px solid var(--border-subtle);
-        border-radius: var(--radius-xl);
-        padding: 2rem;
-        display: grid;
-        grid-template-columns: 1.2fr 1fr;
+        grid-template-columns: minmax(0, 1fr);
         gap: 2.5rem;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-    }
-
-    .simulator-visualizer {
-        position: relative;
-        background: #0e101a;
-        border: 1px solid var(--border-subtle);
-        border-radius: var(--radius-lg);
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-    }
-
-    #jigglerCanvas {
-        width: 100%;
-        height: auto;
-        display: block;
-    }
-
-    .simulator-hud {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: rgba(14, 16, 26, 0.85);
-        backdrop-filter: blur(8px);
-        padding: 0.75rem 1.25rem;
-        display: flex;
-        justify-content: space-between;
         align-items: center;
-        border-top: 1px solid var(--border-subtle);
-        font-size: 0.825rem;
     }
 
-    .hud-status {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-weight: 700;
-        color: var(--primary);
+    .hero__lead {
+        margin-top: 1.1rem;
+        font-size: 1.09rem;
+        color: var(--ink-2);
+        max-width: 56ch;
     }
 
-    .hud-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: #10b981;
+    .hero__actions {
+        margin-top: 1.75rem;
     }
 
-    .hud-dot.pulsing {
-        box-shadow: 0 0 8px #10b981;
-        animation: pulseDot 1s infinite alternate;
-    }
-
-    @keyframes pulseDot {
-        from { opacity: 0.5; }
-        to { opacity: 1; }
-    }
-
-    .hud-metrics {
-        color: var(--text-muted);
-        font-weight: 500;
-    }
-
-    .hud-separator {
-        margin: 0 0.35rem;
-        opacity: 0.5;
-    }
-
-    .simulator-controls {
-        display: flex;
-        flex-direction: column;
-        gap: 1.25rem;
-    }
-
-    .control-label {
+    .hero__meta {
+        margin-top: 1rem;
         font-size: 0.85rem;
-        font-weight: 700;
-        color: var(--text-muted);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        margin-bottom: 0.5rem;
-        display: block;
+        color: var(--ink-3);
     }
 
-    .pattern-selector {
+    .hero__art-panel {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--r-xl);
+        padding: 1.75rem;
         display: flex;
         flex-direction: column;
+        align-items: center;
+        gap: 1.25rem;
+        box-shadow: var(--shadow-md);
+    }
+
+    .hero__icon {
+        border-radius: 26px;
+        box-shadow: var(--shadow-md);
+    }
+
+    .hero__art-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
         gap: 0.5rem;
-        max-height: 260px;
-        overflow-y: auto;
-        padding-right: 0.5rem;
+        justify-content: center;
     }
 
-    .pattern-btn {
-        background: var(--bg-surface-elevated);
-        border: 1px solid var(--border-subtle);
-        padding: 0.65rem 1rem;
-        border-radius: var(--radius-md);
-        color: var(--text-main);
-        text-align: left;
-        cursor: pointer;
-        transition: all 0.2s;
+    /* ------------------------------------------------------------ facts -- */
+    .facts {
+        margin: clamp(2.5rem, 1.5rem + 3vw, 4rem) 0 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+        gap: 1rem;
+        border-top: 1px solid var(--line);
+        padding-top: 1.75rem;
+    }
+
+    .facts__item {
         display: flex;
-        flex-direction: column;
+        gap: 0.9rem;
+        align-items: flex-start;
     }
 
-    .pattern-btn strong {
-        font-size: 0.9rem;
+    .facts__value {
+        font-size: 2.1rem;
+        font-weight: 800;
+        line-height: 1;
+        letter-spacing: -0.04em;
+        color: var(--brand);
+        flex: none;
+        min-width: 2.2ch;
     }
 
-    .pattern-btn span {
-        font-size: 0.75rem;
-        color: var(--text-muted);
+    .facts__label {
+        display: block;
+        font-weight: 650;
+        font-size: 0.95rem;
     }
 
-    .pattern-btn:hover {
-        border-color: var(--border-highlight);
-    }
-
-    .pattern-btn.active {
-        background: rgba(255, 168, 1, 0.12);
-        border-color: var(--primary);
-    }
-
-    .pattern-btn.active strong {
-        color: var(--primary);
-    }
-
-    .pattern-info-box {
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid var(--border-subtle);
-        border-radius: var(--radius-md);
-        padding: 0.85rem 1rem;
-        font-size: 0.875rem;
-        color: var(--text-muted);
+    .facts__detail {
+        display: block;
+        font-size: 0.86rem;
+        color: var(--ink-3);
         line-height: 1.5;
     }
 
-    .simulator-actions {
+    /* --------------------------------------------------------- feature -- */
+    .feature {
         display: flex;
-        gap: 1rem;
-        margin-top: auto;
+        flex-direction: column;
     }
 
-    .btn-toggle-jiggle {
-        flex: 1;
+    .feature__icon {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 0.5rem;
-        background: var(--primary);
-        color: #0c0d14;
-        border: none;
-        padding: 0.75rem 1.25rem;
-        border-radius: var(--radius-md);
-        font-weight: 700;
-        font-size: 0.9rem;
-        cursor: pointer;
-        transition: transform 0.2s;
+        width: 2.75rem;
+        height: 2.75rem;
+        border-radius: var(--r-md);
+        background: var(--brand-soft);
+        color: var(--brand);
+        margin-bottom: 1rem;
+        flex: none;
     }
 
-    .btn-toggle-jiggle:hover {
-        transform: translateY(-2px);
+    .feature__title {
+        margin-bottom: 0.5rem;
     }
 
-    .btn-reset-jiggle {
-        background: transparent;
-        border: 1px solid var(--border-subtle);
-        color: var(--text-muted);
-        padding: 0.75rem 1.25rem;
-        border-radius: var(--radius-md);
-        font-weight: 600;
-        font-size: 0.875rem;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-
-    .btn-reset-jiggle:hover {
-        color: var(--text-main);
-        border-color: var(--text-muted);
-    }
-
-    /* FEATURES SECTION */
-    .features-section {
-        padding: 5rem 0;
-    }
-
-    .features-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.75rem;
-        max-width: 900px;
-        margin: 0 auto;
-    }
-
-    .feature-card {
-        background: var(--bg-surface);
-        border: 1px solid var(--border-subtle);
-        border-radius: var(--radius-lg);
-        padding: 2rem;
-        display: flex;
-        flex-direction: column;
-        transition: all 0.25s ease;
-    }
-
-    .feature-card:hover {
-        transform: translateY(-4px);
-        border-color: var(--border-highlight);
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
-    }
-
-    .highlighted-card {
-        background: linear-gradient(180deg, rgba(255, 168, 1, 0.06) 0%, var(--bg-surface) 100%);
-        border-color: var(--border-highlight);
-    }
-
-    .feature-icon-box {
-        width: 52px;
-        height: 52px;
-        border-radius: var(--radius-md);
-        background: rgba(255, 168, 1, 0.1);
-        color: var(--primary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 1.5rem;
-    }
-
-    .feature-card h3 {
-        font-size: 1.3rem;
-        font-weight: 700;
-        margin-bottom: 0.75rem;
-        color: var(--text-main);
-    }
-
-    .feature-card p {
+    .feature__body {
+        color: var(--ink-2);
         font-size: 0.95rem;
-        color: var(--text-muted);
-        line-height: 1.6;
-        margin-bottom: 1.5rem;
-        flex: 1;
+        margin-bottom: 1rem;
     }
 
-    .feature-tags {
+    .feature__points {
+        list-style: none;
+        margin: 0 0 1.1rem;
+        padding: 0;
         display: flex;
         flex-wrap: wrap;
         gap: 0.4rem;
     }
 
-    .feature-tags span {
-        font-size: 0.75rem;
-        background: var(--bg-surface-elevated);
-        color: var(--text-muted);
-        padding: 0.25rem 0.65rem;
-        border-radius: var(--radius-pill);
-        border: 1px solid var(--border-subtle);
+    .feature__points li {
+        font-size: 0.76rem;
+        font-weight: 600;
+        color: var(--ink-2);
+        background: var(--surface-2);
+        border: 1px solid var(--line);
+        border-radius: var(--r-pill);
+        padding: 0.2rem 0.65rem;
     }
 
-    /* HOW IT WORKS */
-    .how-section {
-        padding: 5rem 0;
-        background: rgba(20, 22, 34, 0.4);
+    .feature__link {
+        margin-top: auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.9rem;
+        font-weight: 650;
+        text-decoration: none;
+        color: var(--brand);
     }
 
-    .steps-grid {
+    .feature__link:hover {
+        text-decoration: underline;
+    }
+
+    .feature__link svg {
+        transition: transform 0.16s ease;
+    }
+
+    .feature__link:hover svg {
+        transform: translateX(3px);
+    }
+
+    /* --------------------------------------------------------- pattern -- */
+    .pattern-grid {
+        list-style: none;
+        margin: 0;
+        padding: 0;
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2rem;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+        gap: 1rem;
     }
 
-    .step-card {
-        background: var(--bg-surface);
-        border: 1px solid var(--border-subtle);
-        border-radius: var(--radius-lg);
-        padding: 2.25rem;
-        position: relative;
+    .pattern {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--r-lg);
+        padding: 1.15rem 1.25rem;
     }
 
-    .step-number {
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        background: var(--primary);
-        color: #0c0d14;
-        font-weight: 800;
-        font-size: 1.25rem;
+    .pattern__head {
         display: flex;
         align-items: center;
-        justify-content: center;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 4px 14px var(--primary-glow);
+        justify-content: space-between;
+        gap: 0.75rem;
+        margin-bottom: 0.4rem;
     }
 
-    .step-card h3 {
-        font-size: 1.2rem;
+    .pattern__name {
+        font-size: 1rem;
         font-weight: 700;
-        margin-bottom: 0.75rem;
-        color: var(--text-main);
     }
 
-    .step-card p {
-        font-size: 0.95rem;
-        color: var(--text-muted);
-        line-height: 1.6;
+    .pattern__short {
+        font-size: 0.9rem;
+        color: var(--ink-2);
+        line-height: 1.55;
     }
 
-    /* FAQ SECTION */
-    .faq-section {
-        padding: 5rem 0;
+    .section__cta {
+        margin-top: 2rem;
+        text-align: center;
     }
 
-    .faq-grid {
+    /* ----------------------------------------------------------- steps -- */
+    .steps {
+        list-style: none;
+        margin: 0;
+        padding: 0;
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.75rem;
-        max-width: 1000px;
-        margin: 0 auto;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+        gap: 1.25rem;
+        counter-reset: step;
     }
 
-    .faq-item {
-        background: var(--bg-surface);
-        border: 1px solid var(--border-subtle);
-        border-radius: var(--radius-lg);
-        padding: 2rem;
+    .step {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--r-lg);
+        padding: 1.5rem;
     }
 
-    .faq-item h4 {
-        font-size: 1.1rem;
+    .step__number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        background: var(--brand);
+        color: #fff;
+        font-size: 0.85rem;
         font-weight: 700;
-        color: var(--text-main);
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.85rem;
+        flex: none;
     }
 
-    .faq-item p {
-        font-size: 0.925rem;
-        color: var(--text-muted);
+    .step__title {
+        font-size: 1.05rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .step__body {
+        font-size: 0.92rem;
+        color: var(--ink-2);
         line-height: 1.6;
     }
 
-    /* RESPONSIVE */
-    @media (max-width: 980px) {
-        .highlights-grid {
-            grid-template-columns: repeat(3, 1fr);
-        }
-
-        .simulator-card {
-            grid-template-columns: 1fr;
-        }
-
-        .features-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .steps-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .faq-grid {
-            grid-template-columns: 1fr;
-        }
+    /* ------------------------------------------------------------- cta -- */
+    .cta {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--r-xl);
+        padding: clamp(1.75rem, 1.25rem + 2.5vw, 3rem);
+        display: grid;
+        gap: 1.5rem;
+        align-items: center;
+        box-shadow: var(--shadow-md);
     }
 
-    @media (max-width: 768px) {
-        .highlights-grid {
-            grid-template-columns: 1fr;
-        }
+    .cta__copy p {
+        margin-top: 0.6rem;
+        color: var(--ink-2);
+        max-width: 52ch;
     }
 
-    @media (max-width: 640px) {
-        .hero-title {
-            font-size: 2.5rem;
+    @media (min-width: 60rem) {
+        .hero__inner {
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+            gap: 3.5rem;
         }
 
-        .hero-tagline {
-            font-size: 1.15rem;
+        .cta {
+            grid-template-columns: minmax(0, 1.4fr) auto;
         }
 
-        .features-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .simulator-card {
-            padding: 1.25rem;
+        .cta__actions {
+            justify-content: flex-end;
         }
     }
 </style>

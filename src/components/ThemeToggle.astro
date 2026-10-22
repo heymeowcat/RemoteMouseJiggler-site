@@ -1,0 +1,166 @@
+---
+/**
+ * Theme switcher. Cycles system -> light -> dark and persists the choice.
+ * The inline script in Layout.astro sets `data-theme` before first paint;
+ * this component keeps `data-theme-pref` in sync so the right icon shows.
+ */
+---
+
+<button
+    type="button"
+    class="theme-toggle"
+    id="theme-toggle"
+    aria-label="Switch colour theme"
+    title="Switch colour theme"
+>
+    <svg
+        class="theme-toggle__icon theme-toggle__icon--system"
+        viewBox="0 0 24 24"
+        width="18"
+        height="18"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+    >
+        <rect x="2.5" y="4" width="19" height="13" rx="2"></rect>
+        <path d="M8.5 20.5h7"></path>
+        <path d="M12 17v3.5"></path>
+    </svg>
+
+    <svg
+        class="theme-toggle__icon theme-toggle__icon--light"
+        viewBox="0 0 24 24"
+        width="18"
+        height="18"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+    >
+        <circle cx="12" cy="12" r="4"></circle>
+        <path
+            d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+        ></path>
+    </svg>
+
+    <svg
+        class="theme-toggle__icon theme-toggle__icon--dark"
+        viewBox="0 0 24 24"
+        width="18"
+        height="18"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+    >
+        <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"></path>
+    </svg>
+
+    <span class="visually-hidden" data-theme-label>Colour theme</span>
+</button>
+
+<style>
+    .theme-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.35rem;
+        height: 2.35rem;
+        padding: 0;
+        border-radius: var(--r-md);
+        border: 1px solid var(--line-strong);
+        background: var(--surface);
+        color: var(--ink-2);
+        cursor: pointer;
+        transition:
+            background-color 0.16s ease,
+            color 0.16s ease,
+            border-color 0.16s ease;
+    }
+
+    .theme-toggle:hover {
+        color: var(--brand);
+        border-color: var(--brand);
+    }
+
+    .theme-toggle__icon {
+        display: none;
+        width: 1.1rem;
+        height: 1.1rem;
+    }
+
+    :global(html[data-theme-pref="system"]) .theme-toggle__icon--system,
+    :global(html[data-theme-pref="light"]) .theme-toggle__icon--light,
+    :global(html[data-theme-pref="dark"]) .theme-toggle__icon--dark {
+        display: block;
+    }
+
+    /* Fall back to the sun icon if the preference attribute is missing. */
+    :global(html:not([data-theme-pref])) .theme-toggle__icon--light {
+        display: block;
+    }
+</style>
+
+<script is:inline>
+    (function () {
+        var ORDER = ["system", "light", "dark"];
+        var LABELS = {
+            system: "Colour theme: following your system. Activate to use the light theme.",
+            light: "Colour theme: light. Activate to use the dark theme.",
+            dark: "Colour theme: dark. Activate to follow your system theme.",
+        };
+
+        var root = document.documentElement;
+        var button = document.getElementById("theme-toggle");
+        var label = button && button.querySelector("[data-theme-label]");
+        if (!button) return;
+
+        function currentPref() {
+            var pref = root.getAttribute("data-theme-pref");
+            return ORDER.indexOf(pref) > -1 ? pref : "system";
+        }
+
+        function resolve(pref) {
+            if (pref === "light" || pref === "dark") return pref;
+            return window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light";
+        }
+
+        function apply(pref, persist) {
+            root.setAttribute("data-theme-pref", pref);
+            root.dataset.theme = resolve(pref);
+            if (persist) {
+                try {
+                    localStorage.setItem("rmj-theme", pref);
+                } catch (e) {
+                    /* storage blocked, the choice simply will not persist */
+                }
+            }
+            if (label) label.textContent = LABELS[pref];
+            button.setAttribute("aria-label", LABELS[pref]);
+        }
+
+        apply(currentPref(), false);
+
+        button.addEventListener("click", function () {
+            var next = ORDER[(ORDER.indexOf(currentPref()) + 1) % ORDER.length];
+            apply(next, true);
+        });
+
+        // Follow the system theme live while the preference is "system".
+        var media = window.matchMedia("(prefers-color-scheme: dark)");
+        var onChange = function () {
+            if (currentPref() === "system") apply("system", false);
+        };
+        if (media.addEventListener) media.addEventListener("change", onChange);
+        else if (media.addListener) media.addListener(onChange);
+    })();
+</script>
