@@ -5,7 +5,7 @@ Marketing site, feature reference, press kit, privacy policy and terms for the
 
 > **Live site:** <https://heymeowcat.is-a.dev/RemoteMouseJiggler-site/>
 >
-> **App:** [Google Play](https://play.google.com/store/apps/details?id=com.heymeowcat.remotemousejiggler) · [Source code](https://github.com/heymeowcat/RemoteMouseJiggler)
+> **App:** [Google Play](https://play.google.com/store/apps/details?id=com.heymeowcat.remotemousejiggler)
 
 Turn an Android phone into a Bluetooth mouse, trackpad, keyboard and automated
 mouse jiggler. No software on the machine you are controlling, no internet
@@ -35,7 +35,8 @@ saved colour theme before first paint.
 ```
 src/
   assets/logo.png        app icon, optimised at build time via astro:assets
-  components/            Brand, Header, Footer, PageHero, ThemeToggle
+  components/            AppPreview, Brand, Header, Footer, PageHero,
+                         PlayBadge, ThemeToggle
   data/site.js           brand, URLs and metadata
   data/content.js        all product copy, written from the app source
   layouts/Layout.astro   document head, SEO, structured data
@@ -72,6 +73,10 @@ internal link.
 | Brand blue | `#3F19BC` | App icon background |
 | Duck yellow | `#FFB700` | App icon artwork |
 
+The "Get it on Google Play" button is Google's own vector badge, self-hosted
+from `public/google-play-badge.svg` so it loads with the rest of the site and
+adds no third-party request.
+
 ## Deployment
 
 GitHub Actions (`.github/workflows/astro.yml`) builds and publishes to GitHub
@@ -79,7 +84,3 @@ Pages under the `heymeowcat.is-a.dev` custom domain. The canonical origin and
 base path live in `astro.config.mjs`; do not override `--site` in the
 workflow, because GitHub reports the origin as `http://` and it corrupts the
 generated sitemap.
-
-## Licence
-
-MIT

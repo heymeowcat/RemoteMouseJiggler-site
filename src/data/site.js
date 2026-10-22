@@ -18,8 +18,6 @@ export const SITE = {
 
     playUrl:
         "https://play.google.com/store/apps/details?id=com.heymeowcat.remotemousejiggler",
-    githubUrl: "https://github.com/heymeowcat/RemoteMouseJiggler",
-    siteRepoUrl: "https://github.com/heymeowcat/RemoteMouseJiggler-site",
     developerUrl: "https://heymeowcat.is-a.dev",
     linkedinUrl: "https://linkedin.com/in/vidura-fernando",
 

@@ -6,20 +6,7 @@ Site root: **https://heymeowcat.is-a.dev/RemoteMouseJiggler-site/**
 
 ## 0. Before deploying — required manual steps
 
-### 0.1 Make the app repository public (blocking)
-
-`github.com/heymeowcat/RemoteMouseJiggler` is currently **private**, so every
-"View the source" button on the site, and the source links in the app
-README, resolve to a 404. It also makes the site's "open source" and "MIT
-licensed" claims unverifiable, which is a trust problem for a product whose
-entire pitch is verifiability.
-
-Fix it in one click: **Repository → Settings → Danger Zone → Change
-visibility → Public.**
-
-Do this before deploying the site.
-
-### 0.2 Confirm the custom domain and base path
+### 0.1 Confirm the custom domain and base path
 
 The site is published as a GitHub Pages project site under the
 `heymeowcat.is-a.dev` custom domain, so it lives at
@@ -27,12 +14,20 @@ The site is published as a GitHub Pages project site under the
 match that exactly. If the repository is renamed, update both, or the
 canonical tags and sitemap will point at 404s.
 
-### 0.3 Do not override `--site` in the deploy workflow
+### 0.2 Do not override `--site` in the deploy workflow
 
 GitHub reports the Pages origin as `http://`, not `https://`. Passing
 `--site` from the workflow silently produced an `http://` sitemap in a past
 build. The workflow now only overrides `--base`; the origin comes from
 `astro.config.mjs`.
+
+### 0.3 Do not reintroduce source-code links
+
+The app repository is private and the app is not open source. The site
+carries no "view the source" button and no "open source" or "MIT licence"
+claim, and it does not link to the private repository, which would 404 for
+readers. If the app is ever published under an open licence, the press kit
+and the download page are the two places to add the link.
 
 ---
 
@@ -50,6 +45,7 @@ These were live bugs, not opinions:
 | No structured data | No rich results eligibility. | `SoftwareApplication`, `FAQPage`, `BreadcrumbList`, `WebPage`, `TechArticle`, `Organization`, `WebSite`. |
 | Google Fonts loaded from a third party | A render-blocking third-party request on the critical path. | Removed entirely; the system font stack is used instead. |
 | The jiggler simulator | A canvas animation loop running on every page load. | Removed. |
+| The hero showed only a logo and three chips | A large empty card that said nothing about the product. | Replaced with a faithful preview of the app's real jiggler screen. |
 | Heading hierarchy skipped levels | FAQ questions were `<h4>` directly under an `<h2>`. | Fixed; the build audit now fails on skipped levels. |
 | Multiple pages competed for the same terms | The home page was the only substantive page. | Ten pages, each with a distinct intent. |
 

@@ -1,0 +1,299 @@
+---
+/**
+ * A static preview of the app's Mouse Jiggler screen.
+ *
+ * Every value shown here is the real default from the app:
+ *   - the eight pattern names come from the JigglePattern enum
+ *   - "Micro Jitter" is the default pattern
+ *   - interval 1.0s and distance 15px are the persisted defaults
+ *   - the labels are the app's own string resources
+ *
+ * It is a picture of the interface, not a working simulator, so it is hidden
+ * from assistive technology and described as a single image instead.
+ */
+import { PATTERNS } from "../data/content";
+
+const INTERVAL_MIN = 0.2;
+const INTERVAL_MAX = 5.0;
+const INTERVAL_VALUE = 1.0;
+
+const DISTANCE_MIN = 2;
+const DISTANCE_MAX = 50;
+const DISTANCE_VALUE = 15;
+
+const intervalPct = ((INTERVAL_VALUE - INTERVAL_MIN) / (INTERVAL_MAX - INTERVAL_MIN)) * 100;
+const distancePct = ((DISTANCE_VALUE - DISTANCE_MIN) / (DISTANCE_MAX - DISTANCE_MIN)) * 100;
+---
+
+<figure class="preview">
+    <div
+        class="preview__device"
+        role="img"
+        aria-label="Preview of the Mouse Jiggler screen in Remote Mouse Jiggler. It shows the start control, the eight movement patterns with Micro Jitter selected, an interval speed of one second, a movement distance of fifteen pixels, and a duration set to run until stopped."
+    >
+        <div class="preview__bar">
+            <span class="preview__bar-title">Mouse Jiggler</span>
+            <span class="preview__bar-action">Reset Stats</span>
+        </div>
+
+        <div class="preview__body">
+            <div class="preview__stage">
+                <span class="preview__play">
+                    <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true">
+                        <path d="M8 5.2v13.6a1 1 0 0 0 1.53.85l10.5-6.8a1 1 0 0 0 0-1.7L9.53 4.35A1 1 0 0 0 8 5.2z"></path>
+                    </svg>
+                </span>
+                <p class="preview__state">Jiggler Idle</p>
+                <p class="preview__stats">Moves: 0</p>
+            </div>
+
+            <p class="preview__label">Movement pattern</p>
+            <ul class="preview__patterns">
+                {
+                    PATTERNS.map((pattern) => (
+                        <li
+                            class:list={[
+                                "preview__pattern",
+                                pattern.id === "jitter" && "is-selected",
+                            ]}
+                        >
+                            {pattern.name}
+                        </li>
+                    ))
+                }
+            </ul>
+
+            <p class="preview__label">
+                Interval Speed <span class="preview__value">{INTERVAL_VALUE.toFixed(1)} sec</span>
+            </p>
+            <div class="preview__slider">
+                <span class="preview__track">
+                    <span class="preview__fill" style={`width:${intervalPct}%`}></span>
+                    <span class="preview__knob" style={`left:${intervalPct}%`}></span>
+                </span>
+            </div>
+
+            <p class="preview__label">
+                Movement Distance <span class="preview__value">{DISTANCE_VALUE} px</span>
+            </p>
+            <div class="preview__slider">
+                <span class="preview__track">
+                    <span class="preview__fill" style={`width:${distancePct}%`}></span>
+                    <span class="preview__knob" style={`left:${distancePct}%`}></span>
+                </span>
+            </div>
+
+            <p class="preview__label">Duration</p>
+            <div class="preview__segmented">
+                <span class="preview__segment is-active">Until stopped</span>
+                <span class="preview__segment">Timed</span>
+            </div>
+        </div>
+    </div>
+
+    <figcaption class="preview__caption">
+        The Mouse Jiggler screen, showing the app's real defaults
+    </figcaption>
+</figure>
+
+<style>
+    .preview {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.85rem;
+    }
+
+    .preview__device {
+        width: 100%;
+        max-width: 19rem;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 1.5rem;
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
+    }
+
+    /* App bar */
+    .preview__bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding: 0.8rem 1rem;
+        background: linear-gradient(
+            120deg,
+            var(--brand),
+            color-mix(in srgb, var(--brand) 72%, #000)
+        );
+        color: #fff;
+    }
+
+    .preview__bar-title {
+        font-weight: 700;
+        font-size: 0.95rem;
+        letter-spacing: -0.01em;
+    }
+
+    .preview__bar-action {
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: rgb(255 255 255 / 0.85);
+    }
+
+    /* Body */
+    .preview__body {
+        padding: 1rem;
+    }
+
+    .preview__stage {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-bottom: 1rem;
+    }
+
+    .preview__play {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 4rem;
+        height: 4rem;
+        border-radius: 50%;
+        background: var(--brand);
+        color: #fff;
+        box-shadow: 0 8px 20px -8px var(--brand);
+        padding-left: 3px;
+    }
+
+    .preview__state {
+        margin-top: 0.7rem;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+    }
+
+    .preview__stats {
+        font-size: 0.78rem;
+        color: var(--ink-3);
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Pattern grid */
+    .preview__label {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.5rem;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+        margin-top: 0.9rem;
+        margin-bottom: 0.45rem;
+    }
+
+    .preview__value {
+        font-size: 0.74rem;
+        font-weight: 700;
+        letter-spacing: 0;
+        text-transform: none;
+        color: var(--brand);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .preview__patterns {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.35rem;
+    }
+
+    .preview__pattern {
+        font-size: 0.74rem;
+        font-weight: 600;
+        line-height: 1.25;
+        padding: 0.4rem 0.5rem;
+        border-radius: 0.55rem;
+        border: 1px solid var(--line);
+        background: var(--surface-2);
+        color: var(--ink-2);
+        text-align: center;
+    }
+
+    .preview__pattern.is-selected {
+        background: var(--brand-soft);
+        border-color: var(--brand);
+        color: var(--brand);
+    }
+
+    /* Sliders */
+    .preview__slider {
+        padding: 0 2px;
+    }
+
+    .preview__track {
+        position: relative;
+        display: block;
+        height: 0.3rem;
+        border-radius: var(--r-pill);
+        background: var(--surface-3);
+    }
+
+    .preview__fill {
+        position: absolute;
+        inset-block: 0;
+        left: 0;
+        border-radius: var(--r-pill);
+        background: var(--brand);
+    }
+
+    .preview__knob {
+        position: absolute;
+        top: 50%;
+        width: 0.85rem;
+        height: 0.85rem;
+        margin-left: -0.425rem;
+        border-radius: 50%;
+        background: var(--brand);
+        border: 2px solid var(--surface);
+        transform: translateY(-50%);
+        box-shadow: 0 1px 4px rgb(0 0 0 / 0.25);
+    }
+
+    /* Duration */
+    .preview__segmented {
+        display: inline-flex;
+        padding: 0.2rem;
+        gap: 0.2rem;
+        border-radius: var(--r-pill);
+        background: var(--surface-2);
+        border: 1px solid var(--line);
+    }
+
+    .preview__segment {
+        font-size: 0.74rem;
+        font-weight: 600;
+        padding: 0.25rem 0.7rem;
+        border-radius: var(--r-pill);
+        color: var(--ink-3);
+    }
+
+    .preview__segment.is-active {
+        background: var(--brand);
+        color: #fff;
+    }
+
+    .preview__caption {
+        font-size: 0.78rem;
+        color: var(--ink-3);
+        text-align: center;
+        max-width: 22rem;
+    }
+</style>

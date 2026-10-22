@@ -8,7 +8,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 const title = "Press kit";
 const description =
-    "Brand assets, an app description and the key facts for Remote Mouse Jiggler, the free open source Android Bluetooth mouse, keyboard and mouse jiggler.";
+    "Brand assets, an app description and the key facts for Remote Mouse Jiggler, the free Android Bluetooth mouse, keyboard and mouse jiggler.";
 
 const facts = [
     { label: "App name", value: SITE.name },
@@ -17,11 +17,11 @@ const facts = [
     { label: "Current version", value: SITE.version },
     { label: "Package", value: SITE.packageName },
     { label: "Price", value: "Free" },
-    { label: "Licence", value: "MIT" },
+    { label: "Ads", value: "None" },
     { label: "Category", value: "Utilities" },
 ];
 
-const boilerplate = `Remote Mouse Jiggler is a free, open source Android app that turns a phone into a Bluetooth mouse, keyboard and automated mouse jiggler. It connects to any computer, TV or other device that speaks the standard Bluetooth HID profile, so nothing has to be installed on the machine being controlled. The app includes a precision touchpad, a gyroscope air mouse, a virtual keyboard, and a mouse jiggler with eight movement patterns — including a coding emulator that types realistic lines of code with human-like typos and corrections. It requests no internet permission, collects no data, and shows no ads.`;
+const boilerplate = `Remote Mouse Jiggler is a free Android app that turns a phone into a Bluetooth mouse, keyboard and automated mouse jiggler. It connects to any computer, TV or other device that speaks the standard Bluetooth HID profile, so nothing has to be installed on the machine being controlled. The app includes a precision touchpad, a gyroscope air mouse, a virtual keyboard, and a mouse jiggler with eight movement patterns — including a coding emulator that types realistic lines of code with human-like typos and corrections. It requests no internet permission, collects no data, and shows no ads.`;
 
 const schema = [
     {
@@ -159,12 +159,6 @@ const schema = [
                         >
                     </li>
                     <li>
-                        <strong>Source code:</strong>
-                        <a href={SITE.githubUrl} target="_blank" rel="noopener noreferrer"
-                            >{SITE.githubUrl}</a
-                        >
-                    </li>
-                    <li>
                         <strong>Developer:</strong>
                         <a href={SITE.developerUrl} target="_blank" rel="noopener noreferrer"
                             >{SITE.developerUrl}</a
@@ -183,11 +177,8 @@ const schema = [
                 <h2>Writing about the app?</h2>
                 <p>
                     Email <a href={`mailto:${SITE.email}`}>{SITE.email}</a> for a
-                    quote, a demo or a specific question. Bug reports and feature
-                    requests are welcome in the
-                    <a href={SITE.githubUrl} target="_blank" rel="noopener noreferrer"
-                        >GitHub repository</a
-                    >.
+                    quote, a demo or a specific question. Feature requests and bug
+                    reports are welcome too.
                 </p>
             </div>
             <div class="btn-row cta__actions">
