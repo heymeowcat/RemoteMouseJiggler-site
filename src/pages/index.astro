@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import AppPreview from "../components/AppPreview.astro";
+import PatternPreview from "../components/PatternPreview.astro";
 import PlayBadge from "../components/PlayBadge.astro";
 import { SITE } from "../data/site";
 import { PATTERNS, FAQ } from "../data/content";
@@ -283,6 +284,12 @@ const graph = [
                 {
                     PATTERNS.map((pattern) => (
                         <li class="pattern">
+                            <div class="pattern__art">
+                                <PatternPreview
+                                    pattern={pattern.id}
+                                    class="pattern__preview"
+                                />
+                            </div>
                             <div class="pattern__head">
                                 <h3 class="pattern__name">{pattern.name}</h3>
                                 <span
@@ -582,6 +589,17 @@ const graph = [
         padding: 1.15rem 1.25rem;
     }
 
+    .pattern__art {
+        background: var(--pv-bg);
+        border-radius: var(--r-md);
+        padding: 0.6rem 0.6rem 0.35rem;
+        margin-bottom: 0.85rem;
+    }
+
+    .pattern__preview {
+        width: 100%;
+    }
+
     .pattern__head {
         display: flex;
         align-items: center;
@@ -632,7 +650,7 @@ const graph = [
         height: 2rem;
         border-radius: 50%;
         background: var(--brand);
-        color: #fff;
+        color: var(--on-brand);
         font-size: 0.85rem;
         font-weight: 700;
         margin-bottom: 0.85rem;

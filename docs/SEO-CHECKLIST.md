@@ -76,6 +76,29 @@ Checked automatically by `npm run build` → `scripts/audit-build.mjs`.
 | Best Practices | 100 |
 | SEO | 100 |
 
+Audited on **all ten pages, in both the light and the dark theme** — 20 runs,
+all 100/100/100.
+
+> **Why both themes matter.** The brand colour is light in the dark theme, so
+> any white text sitting on it fails contrast. An earlier build had exactly
+> that: the primary button was white on `#a68bff` at **2.7:1** against a 4.5:1
+> requirement. Lighthouse only caught it when the audit happened to run in
+> dark mode, which is why `scripts/check-contrast.mjs` now exists.
+
+---
+
+## 2a. Build-time guards
+
+`npm run build` runs three checks and fails on any of them:
+
+| Script | What it enforces |
+| --- | --- |
+| `scripts/audit-build.mjs` | One `<h1>` per page, no skipped heading levels, an absolute `https://` canonical, no `noindex` on a content page, a title and description on every page, `og:image`, `alt` on every image, and no broken internal links. |
+| `scripts/check-contrast.mjs` | 29 foreground/background token pairs against WCAG AA, in **both** themes. |
+| `scripts/generate-sitemap.mjs` | Writes `sitemap.xml` and `robots.txt` from the routes that actually built. |
+
+Run them individually with `npm run audit` and `npm run contrast`.
+
 ---
 
 ## 3. URL structure
@@ -180,8 +203,30 @@ Bing also supports a `msvalidate.01` meta tag using the same
 ```bash
 npm run build       # builds, generates sitemap.xml + robots.txt, then audits
 npm run assets      # regenerates favicon, icons and og-image from app sources
+npm run pattern-paths  # regenerates the jiggle pattern previews from the app
+npm run audit       # structural and SEO audit only
+npm run contrast    # WCAG AA token check only
 ```
 
 `scripts/audit-build.mjs` fails the build on a missing h1, a skipped heading
 level, a missing or non-https canonical, a `noindex` content page, a missing
 alt attribute, or a broken internal link.
+
+`scripts/check-contrast.mjs` fails the build on any token pair below the
+WCAG AA ratio, in either theme.
+
+### Interface previews
+
+The pattern previews on the home page and the patterns page are generated
+from the app's own `patternPosition()` function by
+`scripts/generate-pattern-paths.py`, so they are the real trajectory rather
+than a decorative squiggle. Re-run it after the app changes how a pattern
+moves:
+
+```bash
+npm run pattern-paths
+```
+
+The screen preview in the hero is hand-built in
+`src/components/AppPreview.astro` and uses the app's own Material 3 colour
+schemes, so it follows the site's theme switch.

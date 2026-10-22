@@ -18,11 +18,15 @@
     /* Brand */
     --brand: #3f19bc;
     --brand-strong: #2a1090;
+    /* Foreground used on top of --brand. */
+    --on-brand: #ffffff;
     --brand-soft: #ece8fd;
     --brand-soft-2: #f5f2ff;
     --accent: #ffb700;
     --accent-soft: #fff4d6;
     --on-accent: #3d2a00;
+    /* Foreground used on top of --accent-soft. */
+    --on-accent-soft: #3d2a00;
 
     /* Surfaces */
     --bg: #fbfaff;
@@ -72,11 +76,17 @@
 
     --brand: #a68bff;
     --brand-strong: #c0aeff;
+    /* The brand colour is light in this theme, so text on it must be dark.
+       Without this the primary button sits at 2.7:1 contrast. */
+    --on-brand: #1b0a52;
     --brand-soft: #1e1840;
     --brand-soft-2: #171231;
     --accent: #ffc63d;
     --accent-soft: #2e2205;
     --on-accent: #2b1d00;
+    /* --accent-soft is a dark surface in this theme, so its text must be
+       light. Reusing --on-accent here made the chip invisible. */
+    --on-accent-soft: #ffc63d;
 
     --bg: #0c0918;
     --surface: #141026;
@@ -268,7 +278,7 @@ main {
     z-index: 200;
     padding: 0.65rem 1rem;
     background: var(--brand);
-    color: #fff;
+    color: var(--on-brand);
     border-radius: var(--r-sm);
     font-weight: 600;
     text-decoration: none;
@@ -277,7 +287,7 @@ main {
 
 .skip-link:focus {
     top: 0.75rem;
-    color: #fff;
+    color: var(--on-brand);
 }
 
 /* ---------------------------------------------------------------- cards -- */
@@ -346,7 +356,7 @@ main {
 .chip--accent {
     background: var(--accent-soft);
     border-color: transparent;
-    color: var(--on-accent);
+    color: var(--on-accent-soft);
 }
 
 .chip--ok {
@@ -396,12 +406,12 @@ main {
 
 .btn--primary {
     background: var(--brand);
-    color: #fff;
+    color: var(--on-brand);
 }
 
 .btn--primary:hover {
     background: var(--brand-strong);
-    color: #fff;
+    color: var(--on-brand);
 }
 
 .btn--accent {
@@ -550,6 +560,45 @@ tbody tr:last-child td {
 
 .nowrap {
     white-space: nowrap;
+}
+
+/* ------------------------------------------------- app preview palette -- */
+
+/*
+ * The app's own Material 3 colour schemes, used by the interface previews.
+ * These come from the app's ui/theme/Color.kt so a preview always matches
+ * what the real app looks like, and they follow the site's theme switch.
+ */
+:root {
+    --pv-bg: #f9f9ff;
+    --pv-surface: #ededf4;
+    --pv-surface-2: #e7e8ee;
+    --pv-accent: #405f90;
+    --pv-on-accent: #ffffff;
+    --pv-ink: #191c20;
+    --pv-ink-2: #44474e;
+    --pv-outline: #74777f;
+    --pv-selected: #d6e3ff;
+
+    --pv-slider-track: #d8dbe6;
+    --pv-slider-tick: #9aa0ae;
+    --pv-slider-thumb: #405f90;
+}
+
+[data-theme="dark"] {
+    --pv-bg: #111318;
+    --pv-surface: #1d2024;
+    --pv-surface-2: #282a2f;
+    --pv-accent: #a9c7ff;
+    --pv-on-accent: #08305f;
+    --pv-ink: #e2e2e9;
+    --pv-ink-2: #c4c6cf;
+    --pv-outline: #8e9099;
+    --pv-selected: #3f4a6b;
+
+    --pv-slider-track: #333a45;
+    --pv-slider-tick: #6d7b93;
+    --pv-slider-thumb: #a9c7ff;
 }
 
 /* --------------------------------------------------------- print ------- */

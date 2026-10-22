@@ -5,8 +5,11 @@
   "description": "Website, feature reference, press kit, privacy policy and terms for the Remote Mouse Jiggler Android app",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && node scripts/generate-sitemap.mjs && node scripts/audit-build.mjs",
+    "build": "astro build && node scripts/generate-sitemap.mjs && node scripts/audit-build.mjs && node scripts/check-contrast.mjs",
     "generate-sitemap": "node scripts/generate-sitemap.mjs",
+    "audit": "node scripts/audit-build.mjs",
+    "contrast": "node scripts/check-contrast.mjs",
+    "pattern-paths": "python3 scripts/generate-pattern-paths.py",
     "preview": "astro preview",
     "astro": "astro",
     "assets": "python3 scripts/generate-assets.py",

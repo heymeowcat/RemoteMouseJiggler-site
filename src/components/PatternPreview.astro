@@ -1,0 +1,63 @@
+---
+/**
+ * Renders one mouse jiggler pattern's movement path.
+ *
+ * The geometry is generated from the app's own `patternPosition()` function
+ * by scripts/generate-pattern-paths.py, so this is the real trajectory
+ * rather than a decorative squiggle. The three layers mirror the app:
+ * a faint guide path, a brighter trailing segment, and the current dot.
+ */
+import paths from "../data/pattern-paths.json";
+
+interface Props {
+    pattern: string;
+    class?: string;
+}
+
+const { pattern, class: className } = Astro.props;
+const shape = paths[pattern as keyof typeof paths];
+
+if (!shape) throw new Error(`Unknown jiggle pattern: ${pattern}`);
+---
+
+<svg
+    class:list={["pv", className]}
+    viewBox="0 0 120 80"
+    aria-hidden="true"
+    focusable="false"
+>
+    <path class="pv__guide" d={shape.guide}></path>
+    <path class="pv__trail" d={shape.trail}></path>
+    <circle class="pv__dot" cx={shape.dot[0]} cy={shape.dot[1]} r="4"></circle>
+</svg>
+
+<style>
+    .pv {
+        display: block;
+        width: 100%;
+        height: auto;
+        overflow: visible;
+    }
+
+    .pv__guide {
+        fill: none;
+        stroke: var(--pv-outline);
+        stroke-opacity: 0.35;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .pv__trail {
+        fill: none;
+        stroke: var(--pv-ink-2);
+        stroke-opacity: 0.75;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .pv__dot {
+        fill: var(--pv-ink-2);
+    }
+</style>
